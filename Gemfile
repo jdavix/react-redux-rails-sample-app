@@ -44,7 +44,7 @@ gem 'devise', '4.2.0'
 
 gem 'react-rails', '1.10.0'
 
-gem 'browserify-rails'
+gem 'browserify-rails', '3.4.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

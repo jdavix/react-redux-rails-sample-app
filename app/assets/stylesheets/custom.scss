@@ -1,0 +1,18 @@
+body {
+  font-family: 'Lato';
+}
+.navbar-nav {
+  li {
+    a {
+      .item-text {
+        font-size: 1.1em;
+      }
+
+      .item-icon {
+        float:right;
+        font-size: 1.5em;
+      }
+    }
+  }
+
+}

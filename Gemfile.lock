@@ -191,7 +191,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-sass (= 3.3.6)
-  browserify-rails
+  browserify-rails (= 3.4.0)
   byebug
   coffee-rails (~> 4.2)
   devise (= 4.2.0)
