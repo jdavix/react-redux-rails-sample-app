@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CustomersApp from './components/containers/customersApp.js';
-import SupportApp from './components/containers/supportApp.js';
+import Tickets from './components/containers/tickets.js';
 
 global.React = React
 global.ReactDOM = ReactDOM
-window.CustomersApp = global.CustomersApp = CustomersApp
+global.Tickets = Tickets
