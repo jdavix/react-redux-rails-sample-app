@@ -7,6 +7,8 @@
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag *webpack_asset_paths("application") %>
+
     <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,500,700" rel="stylesheet">
     <script src="https://use.fontawesome.com/f44aa3a332.js"></script>
   </head>
