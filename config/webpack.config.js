@@ -29,7 +29,8 @@ var config = {
   },
 
   resolve: {
-    root: path.join(__dirname, '..', 'webpack')
+    root: path.join(__dirname, '..', 'webpack'),
+    extensions: ['', '.js', '.jsx', '.json']
   },
 
   plugins: [
@@ -41,7 +42,15 @@ var config = {
       chunks: false,
       modules: false,
       assets: true
-    })]
+    })],
+
+  module: {
+    loaders: [{
+      test:  /\.jsx?$/,
+      exclude: /node_modules/,
+      loaders: ["react-hot", "babel-loader"]
+    }]
+  }
 };
 
 if (production) {

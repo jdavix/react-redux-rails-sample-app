@@ -1,3 +1,6 @@
+@import 'bootstrap_overrides';
+@import 'navbar-fixed-side';
+
 body {
   font-family: 'Lato';
 }
@@ -15,4 +18,29 @@ body {
     }
   }
 
+}
+
+.reactable-pagination {
+  text-align: center;
+  .reactable-page-button {
+    @extend .btn;
+    @extend .btn-default;
+    margin: 0 2px;
+  }
+  .reactable-current-page {
+    background-color: #E6E6E6;
+    border: 1px solid #ccc;
+  }
+  .reactable-previous-page, .reactable-next-page {
+    font-size: 1.1em;
+    margin: 0 4px;
+  }
+}
+
+#add-new-ticket {
+  float:right;
+}
+
+.collection-actions {
+  padding: 20px 25px;
 }

@@ -7,7 +7,6 @@
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
-    <%= javascript_include_tag *webpack_asset_paths("application") %>
 
     <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,500,700" rel="stylesheet">
     <script src="https://use.fontawesome.com/f44aa3a332.js"></script>
@@ -16,41 +15,10 @@
   <body>
 
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-lg-2">
-          <nav class="navbar navbar-default navbar-fixed-side">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">SupportApp</a>
-            </div>
-            <div class="collapse navbar-collapse">
-              <ul class="nav navbar-nav">
-                <li>
-                  <a href="#">
-                    <span class="item-text">Tickets</span>
-                    <i class="item-icon fa fa-question-circle" aria-hidden="true"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <span class="item-text">My Account</span>
-                    <i class="item-icon fa fa-user" aria-hidden="true"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-        <div class="col-sm-9 col-lg-10">
-          <%= yield %>
-        </div>
+      <div class="row" id="app-container">
+
       </div>
     </div>
-
+     <%= javascript_include_tag *webpack_asset_paths("application") %>
   </body>
 </html>
