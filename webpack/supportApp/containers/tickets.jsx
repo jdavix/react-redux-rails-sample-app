@@ -64,7 +64,7 @@ class Tickets extends React.Component {
     this.loadFilters = this.loadFilters.bind(this)
     this.flashMessages = this.flashMessages.bind(this)
     this.onDismissFlash = this.onDismissFlash.bind(this)
-    this._displayTableData = this._displayTableData.bind(this)
+    this.displayTableData = this.displayTableData.bind(this)
     this.refreshTable = this.refreshTable.bind(this)
 
     this.state = {
@@ -128,6 +128,7 @@ class Tickets extends React.Component {
 
   componentDidMount() {
     this.setModalState()
+    this.refreshTable()
   }
 
   createTicket() {
@@ -135,6 +136,7 @@ class Tickets extends React.Component {
     if (formFields) { // if validation fails, value will be null
 
       this.props.requestActions.postRequest("tickets/", {
+        auth_token: this.props.global.authToken,
         ticket: {
           ...formFields
         }
@@ -143,9 +145,10 @@ class Tickets extends React.Component {
           this.setState({
             ...this.state,
             showModal: false,
-            alertMessage: response.meta.message,
+            alertMessage: response.metadata.message,
             alertStyle: "success"
           })
+          browserHistory.push("/tickets")
           this.refreshTable()
         } else {
           this.showErrors()
@@ -161,7 +164,7 @@ class Tickets extends React.Component {
       if (typeof jsonError.errors  === 'string' ) {
         alert(jsonError.errors)
       } else {
-        field_errors = jsonError.meta.fields_errors
+        field_errors = jsonError.metadata.fields_errors
         this.setState({
           ...this.state,
           options: {
@@ -271,25 +274,29 @@ class Tickets extends React.Component {
 
   refreshTable() {
     this.props.requestActions.getRequest("tickets/", {
-      status: this.state.statusFilter
+      auth_token: this.props.global.authToken,
+      scope: this.state.statusFilter
     }, (response) => {
       if (response) {
-        console.log("tableResponse:")
-        console.log(response)
+        this.setState({
+          ...this.state,
+          tableData: response.data.records
+        })
       } else {
         console.log("table response request ERROR")
       }
     })
   }
 
-  _displayTableData() {
-    this.state.tableData.map((row) => {
+  displayTableData() {
+    let data = this.state.tableData
+    return (data.map((row) => {
     return (
         <Tr key={row.id}>
             <Td column="created_at">{row.created_at}</Td>
             <Td column="subject">{row.subject}</Td>
             <Td column="status">{row.status}</Td>
-            <Td column="action">
+            <Td column="id">
               <span>
                 <a onClick={ () => this.showTicket(row.id) }>View</a> | 
                 <a>Cancel</a>
@@ -297,7 +304,7 @@ class Tickets extends React.Component {
             </Td>
         </Tr>
     )
-    })
+    }))
   }
 
   render () {
@@ -311,7 +318,7 @@ class Tickets extends React.Component {
                     <Button onClick={this.newTicket} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>
                   </div>
                 </div>
-                { this.props.isFetching ? (
+                { this.props.request.isFetching ? (
                     <Spinner size={24} color="#286090"/>
                   ) : (
                     <Table className="table"
@@ -322,21 +329,19 @@ class Tickets extends React.Component {
                     >
                       <Thead>
                         <Th column="created_at">
-                          Created At
+                          <span>Created At</span>
                         </Th>
                         <Th column="subject">
-                          Subject
+                          <span>Subject</span>
                         </Th>
                         <Th column="status">
-                          Status
+                          <span>Status</span>
                         </Th>
-                        <Th column="action">
-
+                        <Th column="id">
+                          Action
                         </Th>
                       </Thead>
-                      {
-                        this._displayTableData()
-                      }
+                      {this.displayTableData()}
                     </Table>
                   )
 

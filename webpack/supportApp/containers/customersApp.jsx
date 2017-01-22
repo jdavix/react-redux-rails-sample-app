@@ -10,11 +10,17 @@ import Tickets from './tickets'
 import CustomerMyAccount from './customerMyAccount'
 import DashboardWrapper from '../components/dashboardWrapper'
 
+import * as globalActions from '../actions/global'
+
 const store = configureStore(getInitialState())
 
 const history = syncHistoryWithStore(browserHistory, store)
 
 export default class CustomersApp extends React.Component {
+  constructor(props){
+    super(props)
+    store.dispatch(globalActions.updateAuthToken(this.props.sessionToken))
+  }
   render () {
     return (
       <Provider store={store}>

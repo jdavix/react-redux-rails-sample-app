@@ -47,6 +47,14 @@ h1, h2 {
   }
 }
 
+.reactable-header-sort-desc span:before {
+  content: "\25bc";
+}
+
+.reactable-header-sort-asc span:before {
+  content: "\25b2";
+}
+
 #add-new-ticket {
   float:right;
 }

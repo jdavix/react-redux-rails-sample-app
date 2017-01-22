@@ -69,7 +69,9 @@ export function postRequest(path, params, actionsCallback) {
 export function getRequest(path, params, actionsCallback) {
   let paramsToS = ""
   for (let param in params) {
-    paramsToS+= `${param}=${params[param]}&`
+    if (params[param]) {
+      paramsToS+= `${param}=${params[param]}&`
+    }
   }
 
   params = paramsToS

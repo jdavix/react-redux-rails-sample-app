@@ -5,8 +5,10 @@ class Api::V1::TicketsController < Api::V1::BaseController
   end
 
   def index
-    if Ticket.scopes.include?(params[:scope].to_sym)
-      @tickets = current_customer.tickets.send(params[:scope].to_sym)
+    scope = params[:scope]
+    scope = "all" if scope.blank?
+    if Ticket.scopes.include?(scope.to_sym)
+      @tickets = current_customer.tickets.send(scope.to_sym)
       standard_response(data: @tickets, serializer: TicketSerializer)
     else
       error_response(message: "invalid scope", status: 500)
