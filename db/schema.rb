@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170119181723) do
+ActiveRecord::Schema.define(version: 20170122160626) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 20170119181723) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "auth_token"
+    t.index ["auth_token"], name: "index_customers_on_auth_token", unique: true, using: :btree
     t.index ["email"], name: "index_customers_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_customers_on_reset_password_token", unique: true, using: :btree
   end
@@ -44,6 +46,17 @@ ActiveRecord::Schema.define(version: 20170119181723) do
     t.datetime "updated_at",                          null: false
     t.index ["email"], name: "index_support_admins_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_support_admins_on_reset_password_token", unique: true, using: :btree
+  end
+
+  create_table "tickets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "subject"
+    t.text     "description",     limit: 65535
+    t.string   "status"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "emergency_level"
+    t.index ["emergency_level"], name: "index_tickets_on_emergency_level", using: :btree
+    t.index ["status"], name: "index_tickets_on_status", using: :btree
   end
 
 end

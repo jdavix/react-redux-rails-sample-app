@@ -1,11 +1,11 @@
+import axios from 'axios'
+
 import {
   REQUEST_BEFORE_START,
   REQUEST_SUCCESS,
   REQUEST_FAILURE,
   REQUEST
 } from './requestActionTypes'
-
-import { Actions } from 'react-native-router-flux'
 
 import ENV from '../config/env'
 
@@ -35,25 +35,26 @@ export function requestFailure(errorResponse) {
 export function postRequest(path, params, actionsCallback) {
   return dispatch => {
     dispatch(requestBeforeStart())
-    return fetch(`${ENV.API_URL}/${path}`, {
+    return axios.request({
+              url: `${ENV.API_URL}/${path}`,
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(params)
+              data: params
             })
       .then( (response) => {
         if (response.status >= 200 && response.status <= 299) {
 
-          json = JSON.parse(response._bodyText)
+          let json = response.data
 
           dispatch( requestSuccess( json.data ) )
 
           actionsCallback(json.data)
 
         } else {
-          dispatch( requestFailure( JSON.parse(response._bodyText) ) )
+          dispatch( requestFailure( response.data ) )
           actionsCallback(null)
         }
         
@@ -75,7 +76,8 @@ export function getRequest(path, params, actionsCallback) {
 
   return dispatch => {
     dispatch(requestBeforeStart())
-    return fetch(`${ENV.API_URL}/${path}?${params}`, {
+    return axios.request({
+              url: `${ENV.API_URL}/${path}?${params}`,
               method: 'GET',
               headers: {
                 'Accept': 'application/json',
@@ -83,16 +85,17 @@ export function getRequest(path, params, actionsCallback) {
               }
             })
       .then( (response) => {
+
         if (response.status >= 200 && response.status <= 299) {
 
-          json = JSON.parse(response._bodyText)
+          let json = response.data
 
           dispatch( requestSuccess( json.data ) )
 
           actionsCallback(json.data)
 
         } else {
-          dispatch( requestFailure( JSON.parse(response._bodyText) ) )
+          dispatch( requestFailure( response.json() ) )
           actionsCallback(null)
         }
         
