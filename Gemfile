@@ -43,10 +43,13 @@ gem 'devise', '4.2.0'
 
 gem 'webpack-rails', '0.9.9'
 
-
+gem 'active_model_serializers', '0.10.4'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'rspec-rails', '3.5.2'
+   gem 'rails-controller-testing', '1.0.1'
+   gem 'factory_girl_rails', '4.8.0'
   gem 'byebug', platform: :mri
 end
 

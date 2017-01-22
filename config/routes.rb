@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
-      resources :tickets, only:[:create, :index, :update] do
+      resources :tickets, only:[:create, :index, :update, :show] do
       end
       resources :customers do
         post 'update_profile', to: 'customers#update_profile', on: :collection

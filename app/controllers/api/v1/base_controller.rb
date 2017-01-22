@@ -1,17 +1,36 @@
 class Api::V1::BaseController < ActionController::Base
 
-  def response_format_json(data: nil, message: "", page: nil)
-    structure = {
-      data: data,
-      meta: {
-        message: message
-      }
-    }
-    structure[:meta][:page] = (page + 1) unless page.nil?
-    render(json: structure.to_json, status:200)
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
+  # Response structure:
+  #   {
+  #     data: ...,
+  #     meta: {
+  #       message: string
+  #     }
+  #   }
+  def standard_response(message: "", data: {}, status: 200, metadata: {}, serializer: nil)
+    metadata.merge!(message: message)
+
+    if(data.is_a?(Array) || data.is_a?(ActiveRecord::Relation))
+      data = { "records" => data.map{|item| serializer.new(item).as_json } }
+    elsif !data.is_a? Hash
+      data = serializer.new(data).as_json
+    end
+
+    render(json: {"metadata" => metadata }.merge({data: data}).to_json,
+           status: status)
   end
 
-  def response_error(message: nil, fields_errors: nil, status: nil)
+
+  # Error response structure:
+  # {
+  #   errors: message,
+  #   meta: {
+  #     fields_errors: fields_errors
+  #   }
+  # }
+  def error_response(message: nil, fields_errors: nil, status: 500)
     err = {
       errors: message,
       meta: {
@@ -21,7 +40,9 @@ class Api::V1::BaseController < ActionController::Base
     render(json: err.to_json, status: status)
   end
 
-
+  def record_not_found
+    error_response(message: "record not found", status: 404)
+  end
 
   def current_customer
     current_resource(:customer)

@@ -9,6 +9,9 @@ import { Link } from 'react-router'
 import {Table, Thead, Th, Tr, Td} from 'reactable'
 import Modal from 'react-bootstrap/lib/Modal'
 import Button from 'react-bootstrap/lib/Button'
+import Alert from 'react-bootstrap/lib/Alert'
+import Spinner from 'react-activity/lib/Spinner'
+
 import { browserHistory } from 'react-router'
 import t from 'tcomb-form'
 
@@ -48,12 +51,6 @@ const ticketFormOptions = {
   }
 }
 
-const data = [
-        { id:1, subject: 'This is a test 01', status: 'pending', created_at: 'Oct 24 2016 04:01pm' },
-        { id:2, subject: 'lorem a problem tha 04',  status: 'in-progress', created_at: 'Oct 24 2016 04:02pm' },
-        { id: 3, subject: 'what no sum insump 06', status: 'resolved', created_at: 'Oct 24 2016 04:00pm' }
-       ]
-
 class Tickets extends React.Component {
   constructor(props){
     super(props)
@@ -65,9 +62,39 @@ class Tickets extends React.Component {
     this.showTicket = this.showTicket.bind(this)
     this.createTicket = this.createTicket.bind(this)
     this.loadFilters = this.loadFilters.bind(this)
+    this.flashMessages = this.flashMessages.bind(this)
+    this.onDismissFlash = this.onDismissFlash.bind(this)
+    this._displayTableData = this._displayTableData.bind(this)
+    this.refreshTable = this.refreshTable.bind(this)
+
     this.state = {
       showModal: false,
+      alertMessage: null,
+      tableData: []
     }
+  }
+
+  flashMessages() {
+    if (this.state.alertMessage) {
+      return(
+        <div className="row">
+          <Alert bsStyle={this.state.alertStyle} onDismiss={this.onDismissFlash}>
+            <h4>Hey!</h4>
+            <p>{this.state.alertMessage}</p>
+          </Alert>
+        </div>
+      )
+    } else {
+      return(<span></span>)
+    }
+  }
+
+  onDismissFlash() {
+    this.setState({
+      ...this.state,
+      alertMessage: null,
+      alertStyle: null
+    })
   }
 
   closeModal() {
@@ -113,7 +140,13 @@ class Tickets extends React.Component {
         }
       }, (response) => {
         if (response) {
-          alert("ticket created successfully")
+          this.setState({
+            ...this.state,
+            showModal: false,
+            alertMessage: response.meta.message,
+            alertStyle: "success"
+          })
+          this.refreshTable()
         } else {
           this.showErrors()
         }
@@ -214,8 +247,10 @@ class Tickets extends React.Component {
           {this.modalBody()}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.closeModal}>Cancel</Button>
-          <Button onClick={this.createTicket} bsStyle="primary">Save & Close</Button>
+          <span>
+            <Button onClick={this.closeModal}>Cancel</Button>
+            <Button onClick={this.createTicket} bsStyle="primary">Save & Close</Button>
+          </span>
         </Modal.Footer>
       </Modal>
     )
@@ -234,52 +269,81 @@ class Tickets extends React.Component {
     )
   }
 
-  render () {
-    return (<div>
-              <h2>Tickets</h2>
-              <div className="row collection-actions">
-                <div className="col-md-12">
-                  {this.loadFilters()}
-                  <Button onClick={this.newTicket} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>
-                </div>
-              </div>
-              <Table className="table"
-                     sortable={['subject', 'status', 'created_at']}
-                     defaultSort={{column: 'created_at', direction: 'desc'}}
-                     itemsPerPage={10}
-                     noDataText="no records found"
-              >
-                <Thead>
-                  <Th column="created_at">
-                    Created At
-                  </Th>
-                  <Th column="subject">
-                    Subject
-                  </Th>
-                  <Th column="status">
-                    Status
-                  </Th>
-                  <Th column="action">
+  refreshTable() {
+    this.props.requestActions.getRequest("tickets/", {
+      status: this.state.statusFilter
+    }, (response) => {
+      if (response) {
+        console.log("tableResponse:")
+        console.log(response)
+      } else {
+        console.log("table response request ERROR")
+      }
+    })
+  }
 
-                  </Th>
-                </Thead>
-                {data.map((row) => {
-                  return (
-                      <Tr key={row.id}>
-                          <Td column="created_at">{row.created_at}</Td>
-                          <Td column="subject">{row.subject}</Td>
-                          <Td column="status">{row.status}</Td>
-                          <Td column="action">
-                            <span>
-                              <a onClick={ () => this.showTicket(row.id) }>View</a> | 
-                              <a>Cancel</a>
-                            </span>
-                          </Td>
-                      </Tr>
+  _displayTableData() {
+    this.state.tableData.map((row) => {
+    return (
+        <Tr key={row.id}>
+            <Td column="created_at">{row.created_at}</Td>
+            <Td column="subject">{row.subject}</Td>
+            <Td column="status">{row.status}</Td>
+            <Td column="action">
+              <span>
+                <a onClick={ () => this.showTicket(row.id) }>View</a> | 
+                <a>Cancel</a>
+              </span>
+            </Td>
+        </Tr>
+    )
+    })
+  }
+
+  render () {
+    return (<div className="main-content">
+              {this.flashMessages()}
+              <div className="row">
+                <h2>Tickets</h2>
+                <div className="row collection-actions">
+                  <div className="col-md-12">
+                    {this.loadFilters()}
+                    <Button onClick={this.newTicket} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>
+                  </div>
+                </div>
+                { this.props.isFetching ? (
+                    <Spinner size={24} color="#286090"/>
+                  ) : (
+                    <Table className="table"
+                           sortable={['subject', 'status', 'created_at']}
+                           defaultSort={{column: 'created_at', direction: 'desc'}}
+                           itemsPerPage={10}
+                           noDataText="no records found"
+                    >
+                      <Thead>
+                        <Th column="created_at">
+                          Created At
+                        </Th>
+                        <Th column="subject">
+                          Subject
+                        </Th>
+                        <Th column="status">
+                          Status
+                        </Th>
+                        <Th column="action">
+
+                        </Th>
+                      </Thead>
+                      {
+                        this._displayTableData()
+                      }
+                    </Table>
                   )
-                })}
-              </Table>
-              { this.showActionModal() }
+
+                }
+
+                { this.showActionModal() }
+              </div>
             </div>
     )
   }

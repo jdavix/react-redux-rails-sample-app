@@ -4,13 +4,32 @@ class Api::V1::TicketsController < Api::V1::BaseController
     authenticate_resource(:customer)
   end
 
-  def create
-    ticket = Ticket.new(ticket_params)
-    if ticket.save
-      response_format_json(data: TicketSerializer.new(ticket).as_json, message: "Ticket has been sent!")
+  def index
+    if Ticket.scopes.include?(params[:scope].to_sym)
+      @tickets = current_customer.tickets.send(params[:scope].to_sym)
+      standard_response(data: @tickets, serializer: TicketSerializer)
     else
-      response_error(message: user.errors.full_messages.to_sentence, fields_errors: user.formatted_errors, status: 422)
+      error_response(message: "invalid scope", status: 500)
     end
+  end
+
+  def create
+    @ticket = Ticket.new(ticket_params)
+    @ticket.customer = current_customer
+    if @ticket.save
+      standard_response(message: "ticket successfully sent",
+                        data: @ticket,
+                        serializer: TicketSerializer,
+                        status: 201)
+    else
+      error_response(message: @ticket.errors.full_messages.to_sentence, 
+                     fields_errors: @ticket.errors.full_messages, status: 422)
+    end
+  end
+
+  def show
+    @ticket = current_customer.tickets.find(params[:id])
+    standard_response(data: @ticket, serializer: TicketSerializer)
   end
 
   private

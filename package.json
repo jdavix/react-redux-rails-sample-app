@@ -10,6 +10,7 @@
     "babel-preset-react": "^6.22.0",
     "babel-preset-stage-2": "^6.22.0",
     "react": "^15.4.2",
+    "react-activity": "^1.0.15",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.2",

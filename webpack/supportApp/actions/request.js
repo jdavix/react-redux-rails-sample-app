@@ -51,7 +51,7 @@ export function postRequest(path, params, actionsCallback) {
 
           dispatch( requestSuccess( json.data ) )
 
-          actionsCallback(json.data)
+          actionsCallback(json)
 
         } else {
           dispatch( requestFailure( response.data ) )
@@ -92,7 +92,7 @@ export function getRequest(path, params, actionsCallback) {
 
           dispatch( requestSuccess( json.data ) )
 
-          actionsCallback(json.data)
+          actionsCallback(json)
 
         } else {
           dispatch( requestFailure( response.json() ) )
