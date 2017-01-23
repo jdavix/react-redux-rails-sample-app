@@ -71,7 +71,8 @@ class Tickets extends React.Component {
     this.state = {
       showModal: false,
       alertMessage: null,
-      tableData: []
+      tableData: [],
+      record: null
     }
   }
 
@@ -117,13 +118,14 @@ class Tickets extends React.Component {
     })
   }
 
-  showTicket(id) {
-    browserHistory.push("/tickets/:id")
+  showTicket(row) {
+    browserHistory.push(`/tickets/${row.id}`)
     this.setState({
       ...this.state,
       showModal: true,
       modalTitle: this.getModalSettings("/tickets/:id").title,
-      modalContentType:'show'
+      modalContentType:'show',
+      record: row
     })
   }
 
@@ -227,17 +229,51 @@ class Tickets extends React.Component {
 
   modalBody() {
     if (this.state.modalContentType == "new") {
-      return(<form>
-        <t.form.Form
-          ref="form"
-          type={TicketFormSchema}
-          options={ticketFormOptions}
-        />
-      </form>)
-    } else if (this.state.modalContentType == "show"){
-      <div>
-        <h5>Object Attributes</h5>
-      </div>
+      return (
+        <span>
+          <Modal.Body>
+            <form>
+              <t.form.Form
+                ref="form"
+                type={TicketFormSchema}
+                options={ticketFormOptions}
+              />
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <span>
+              <Button onClick={this.closeModal}>Cancel</Button>
+              <Button onClick={this.createTicket} bsStyle="primary">Save & Close</Button>
+            </span>
+          </Modal.Footer>
+        </span>
+      )
+    } else {
+      if (this.state.modalContentType == "show") {
+        return(<span>
+          <Modal.Body>
+            <div className="record-show">
+              <div className="row">
+                <div className="col-md-6 text-right">Subject:</div><div className="col-md-6">{this.state.record.subject}</div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 text-right">Status:</div><div className="col-md-6">{this.state.record.status}</div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 text-right">Description:</div><div className="col-md-6">{this.state.record.description}</div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 text-right">Emergency Level:</div><div className="col-md-6">{this.state.record.emergency_level}</div>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <span>
+              <Button onClick={this.closeModal}>Close</Button>
+            </span>
+          </Modal.Footer>
+        </span>)
+      }
     }
   }
 
@@ -247,15 +283,7 @@ class Tickets extends React.Component {
         <Modal.Header closeButton>
           <Modal.Title>{this.state.modalTitle}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {this.modalBody()}
-        </Modal.Body>
-        <Modal.Footer>
-          <span>
-            <Button onClick={this.closeModal}>Cancel</Button>
-            <Button onClick={this.createTicket} bsStyle="primary">Save & Close</Button>
-          </span>
-        </Modal.Footer>
+        { this.modalBody() }
       </Modal>
     )
   }
@@ -306,7 +334,7 @@ class Tickets extends React.Component {
             <Td column="status">{row.status}</Td>
             <Td column="id">
               <span>
-                <a onClick={ () => this.showTicket(row.id) }>View</a> | 
+                <a onClick={ () => this.showTicket(row) }>View</a> | 
                 <a>Cancel</a>
               </span>
             </Td>

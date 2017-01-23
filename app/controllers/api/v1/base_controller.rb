@@ -60,8 +60,10 @@ class Api::V1::BaseController < ActionController::Base
 
   private
     def current_resource(resource_identifier)
-      resource_class = resource_identifier.to_s.camelize.constantize
-      resource_class.find_by auth_token: params[:auth_token]
+      if params[:auth_token].present?
+        resource_class = resource_identifier.to_s.camelize.constantize
+        resource_class.find_by auth_token: params[:auth_token]
+      end
     end
 
 end

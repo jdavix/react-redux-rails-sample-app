@@ -28,6 +28,10 @@ class Ticket < ApplicationRecord
     SCOPES + [:all]
   end
 
+  def status_label
+    @status_label ||= STATUSES.invert[self.status.to_sym]
+  end
+
   private
     def set_default_values
         self.status = STATUSES["Open"] if !self.status?

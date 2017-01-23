@@ -30,6 +30,12 @@ h1, h2 {
 
 }
 
+@media (min-width:961px) {
+  .navbar-fixed-side {
+    max-width: 210px;
+  }
+}
+
 .reactable-pagination {
   text-align: center;
   .reactable-page-button {
@@ -69,6 +75,26 @@ h1, h2 {
 
 .actions {
   margin-bottom: 10px;
+}
+
+.record-show {
+  font-size: 1.2em;
+  padding: 0 20px;
+}
+
+.record-show .row {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #f2efef;
+}
+
+.record-show .row:last-child {
+  margin-bottom: 10px;
+  border: none;
+}
+
+.record-show .row .text-right{
+  font-weight: 600;
 }
 
 // Landing Page
