@@ -16,10 +16,8 @@ class SmartTable extends React.Component {
   constructor(props) {
     super(props)
 
-    this.loadFilters = this.loadFilters.bind(this)
     this.displayTableData = this.displayTableData.bind(this)
     this.refreshTable = this.refreshTable.bind(this)
-    this.handleFilterChange = this.handleFilterChange.bind(this)
 
     this.state = {
       tableData: []
@@ -29,19 +27,6 @@ class SmartTable extends React.Component {
 
   componentDidMount() {
     this.refreshTable()
-  }
-
-  loadFilters() {
-    let filters = this.props.global.ticketStatuses
-    filters = filters.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
-    return(
-      <div className="col-md-3">
-        <span>Filter by Status: </span>
-        <select className="form-control" onChange={this.handleFilterChange}>
-          {filters}
-        </select>
-      </div>
-    )
   }
 
   displayTableData() {
@@ -54,7 +39,7 @@ class SmartTable extends React.Component {
             <Td column="status">{row.status}</Td>
             <Td column="id">
               <span>
-                <a onClick={ () => this.showTicket(row) }>View</a>
+                <a onClick={ () => this.props.showAction(row) }>View</a>
               </span>
             </Td>
         </Tr>
@@ -80,18 +65,13 @@ class SmartTable extends React.Component {
     })
   }
 
-  handleFilterChange(e) {
-    let statusFilter = e.target.value
-    this.refreshTable(statusFilter)
-  }
-
   render() {
     return(
       <span>
         <div className="row collection-actions">
           <div className="col-md-12">
             {this.props.filters}
-            <Button onClick={this.newTicket} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>
+            {this.props.collectionActions}
           </div>
         </div>
         { this.props.request.isFetching ? (
@@ -141,4 +121,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SmartTable)
+export default connect(mapStateToProps, mapDispatchToProps, null, {withRef:true})(SmartTable)

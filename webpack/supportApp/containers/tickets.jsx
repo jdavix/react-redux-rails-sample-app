@@ -62,14 +62,14 @@ class Tickets extends React.Component {
     this.closeModal   = this.closeModal.bind(this)
     this.setModalState = this.setModalState.bind(this)
     this.getModalSettings = this.getModalSettings.bind(this)
-    this.newTicket = this.newTicket.bind(this)
-    this.showTicket = this.showTicket.bind(this)
+    this.newRecord = this.newRecord.bind(this)
+    this.showRecord = this.showRecord.bind(this)
     this.createTicket = this.createTicket.bind(this)
 
     this.flashMessages = this.flashMessages.bind(this)
     this.onDismissFlash = this.onDismissFlash.bind(this)
 
-
+    this.handleFilterChange = this.handleFilterChange.bind(this)
 
     this.state = {
       showModal: false,
@@ -111,7 +111,7 @@ class Tickets extends React.Component {
     browserHistory.push("/tickets")
   }
 
-  newTicket() {
+  newRecord() {
     browserHistory.push("/tickets/new")
     this.setState({
       ...this.state,
@@ -121,7 +121,7 @@ class Tickets extends React.Component {
     })
   }
 
-  showTicket(row) {
+  showRecord(row) {
     browserHistory.push(`/tickets/${row.id}`)
     this.setState({
       ...this.state,
@@ -290,12 +290,34 @@ class Tickets extends React.Component {
     )
   }
 
+  collectionActions() {
+    return(<Button onClick={this.newRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>)
+  }
+
+  handleFilterChange(e) {
+    let statusFilter = e.target.value
+    this.refs.smartTable.getWrappedInstance().refreshTable(statusFilter)
+  }
+
+  filters() {
+    let options = this.props.global.ticketStatuses
+    options = options.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
+    return(
+      <div className="col-md-3">
+        <span>Filter by Status: </span>
+        <select className="form-control" onChange={this.handleFilterChange}>
+          {options}
+        </select>
+      </div>
+    )
+  }
+
   render () {
     return (<div className="main-content">
               {this.flashMessages()}
               <div className="row">
                 <h2>Tickets</h2>
-                <SmartTable />
+                <SmartTable ref="smartTable" showAction={ this.showRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
                 { this.showActionModal() }
               </div>
             </div>
