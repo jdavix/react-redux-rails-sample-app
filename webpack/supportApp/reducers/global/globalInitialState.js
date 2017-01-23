@@ -4,6 +4,7 @@ const initialState = {
     currentUserAttrs: null
   },
   visual: {
+    selectedFilter: "all",
     ticketStatuses: [ {id:"all", value: "All"},{ id: "sent", value: "Open"}, { id: "inprogress", value: "In Progress"}, {id: "resolved", value:"Resolved"} ],
   },
   ticketsCrud: {

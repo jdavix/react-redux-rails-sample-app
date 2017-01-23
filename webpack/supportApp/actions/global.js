@@ -2,6 +2,7 @@ import {
   UPDATE_CURRENT_USER,
   UPDATE_AUTH_TOKEN,
   UPDATE_TICKETS,
+  UPDATE_FILTER,
   SHOW_TICKETS
 } from './globalActionTypes'
 
@@ -30,5 +31,12 @@ export function updateViewingTicket(ticket) {
   return {
     type: SHOW_TICKET,
     ticket: ticket
+  }
+}
+
+export function updateFilter(filter) {
+  return {
+    type: UPDATE_FILTER,
+    filter: filter
   }
 }

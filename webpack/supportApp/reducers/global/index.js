@@ -3,6 +3,7 @@ import {
   UPDATE_AUTH_TOKEN,
   LOCAL_CACHE_FAILURE,
   UPDATE_TICKETS,
+  UPDATE_FILTER,
   SHOW_TICKET,
   USER_LOGOUT
 } from '../../actions/globalActionTypes'
@@ -54,7 +55,13 @@ let ticketsReducer = function(state = initialState["ticketsCrud"], action) {
 }
 
 let visualReducer = function(state = initialState["visual"], action) {
-  //NOTE: In this function I can place updates to the "visual" state.
+  switch( action.type ) {
+    case UPDATE_FILTER:
+      return {
+        ...state,
+        selectedFilter: action.filter
+      }
+  }
   return state
 }
 

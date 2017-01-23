@@ -135,7 +135,8 @@ class Tickets extends React.Component {
     this.loadRecords()
   }
 
-  loadRecords(statusFilter=null) {
+  loadRecords(statusFilter = null) {
+    statusFilter = statusFilter || this.props.visual.selectedFilter
     this.props.requestActions.getRequest("tickets/", {
       auth_token: this.props.session.authToken,
       scope: statusFilter
@@ -146,6 +147,7 @@ class Tickets extends React.Component {
         alert("error comunicating with the server")
       }
     })
+    this.props.globalActions.updateFilter(statusFilter)
   }
 
   createTicket() {
@@ -166,6 +168,7 @@ class Tickets extends React.Component {
             alertStyle: "success"
           })
           browserHistory.push("/tickets")
+          this.loadRecords()
         } else {
           this.showErrors()
         }
