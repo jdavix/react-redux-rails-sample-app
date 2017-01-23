@@ -1,7 +1,7 @@
 class Ticket < ApplicationRecord
   #Constants:
   STATUSES = {
-             "Open" => :open, 
+             "Open" => :sent,
              "In Progress" => :inprogress, 
              "Resolved" => :resolved 
            }

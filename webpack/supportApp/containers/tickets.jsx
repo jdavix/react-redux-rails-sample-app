@@ -66,6 +66,7 @@ class Tickets extends React.Component {
     this.onDismissFlash = this.onDismissFlash.bind(this)
     this.displayTableData = this.displayTableData.bind(this)
     this.refreshTable = this.refreshTable.bind(this)
+    this.handleFilterChange = this.handleFilterChange.bind(this)
 
     this.state = {
       showModal: false,
@@ -259,28 +260,35 @@ class Tickets extends React.Component {
     )
   }
 
+  handleFilterChange(e) {
+    let statusFilter = e.target.value
+    this.refreshTable(statusFilter)
+  }
+
   loadFilters() {
-    let filters = [ {id:"all", value: "All"},{ id: "open", value: "Open"}, { id: "in-progress", value: "In Progress"}, {id: "resolved", value:"Resolved"} ]
+    let filters = this.props.global.ticketStatuses
     filters = filters.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
     return(
       <div className="col-md-3">
         <span>Filter by Status: </span>
-        <select className="form-control">
+        <select className="form-control" onChange={this.handleFilterChange}>
           {filters}
         </select>
       </div>
     )
   }
 
-  refreshTable() {
+  refreshTable(filter=null) {
+    let statusFilter = filter || this.state.statusFilter
     this.props.requestActions.getRequest("tickets/", {
       auth_token: this.props.global.authToken,
-      scope: this.state.statusFilter
+      scope: statusFilter
     }, (response) => {
       if (response) {
         this.setState({
           ...this.state,
-          tableData: response.data.records
+          tableData: response.data.records,
+          statusFilter: statusFilter
         })
       } else {
         console.log("table response request ERROR")

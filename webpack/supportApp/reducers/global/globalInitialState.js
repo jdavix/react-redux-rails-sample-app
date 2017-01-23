@@ -1,10 +1,6 @@
 const initialState = {
   authToken: null,
-  localCacheError: null,
-  currentUserAttrs: {
-    username: '...',
-    name: '...'
-  }
+  ticketStatuses: [ {id:"all", value: "All"},{ id: "sent", value: "Open"}, { id: "inprogress", value: "In Progress"}, {id: "resolved", value:"Resolved"} ]
 }
 
 export default initialState
