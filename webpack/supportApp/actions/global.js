@@ -1,6 +1,8 @@
 import {
   UPDATE_CURRENT_USER,
-  UPDATE_AUTH_TOKEN
+  UPDATE_AUTH_TOKEN,
+  UPDATE_TICKETS,
+  SHOW_TICKETS
 } from './globalActionTypes'
 
 export function updateCurrentUser(currentUser){
@@ -17,15 +19,16 @@ export function updateAuthToken(authToken){
   }
 }
 
-export function keepCurrentUser(currentUser, callback = function() {}){
-  return (dispatch) => {
-    dispatch(updateCurrentUser(currentUser))
-    callback()
+export function updateTickets(tickets) {
+  return {
+    type: UPDATE_TICKETS,
+    tickets: tickets
   }
 }
 
-export function keepAuthToken(authToken) {
-  return (dispatch) => {
-    dispatch(updateAuthToken(authToken))
+export function updateViewingTicket(ticket) {
+  return {
+    type: SHOW_TICKET,
+    ticket: ticket
   }
 }

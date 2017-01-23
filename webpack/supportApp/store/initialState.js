@@ -3,7 +3,7 @@ import requestInitialState from  '../reducers/request/requestInitialState'
 
 export default function getInitialState() {
   return {
-    global: globalInitialState,
+    ...globalInitialState,
     request: requestInitialState
   }
 }

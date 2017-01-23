@@ -17,20 +17,11 @@ class SmartTable extends React.Component {
     super(props)
 
     this.displayTableData = this.displayTableData.bind(this)
-    this.refreshTable = this.refreshTable.bind(this)
 
-    this.state = {
-      tableData: []
-    }
-
-  }
-
-  componentDidMount() {
-    this.refreshTable()
   }
 
   displayTableData() {
-    let data = this.state.tableData
+    let data = this.props.ticketsCrud.items
     return (data.map((row) => {
     return (
         <Tr key={row.id}>
@@ -45,24 +36,6 @@ class SmartTable extends React.Component {
         </Tr>
     )
     }))
-  }
-
-  refreshTable(filter=null) {
-    let statusFilter = filter || this.state.statusFilter
-    this.props.requestActions.getRequest("tickets/", {
-      auth_token: this.props.global.authToken,
-      scope: statusFilter
-    }, (response) => {
-      if (response) {
-        this.setState({
-          ...this.state,
-          tableData: response.data.records,
-          statusFilter: statusFilter
-        })
-      } else {
-        alert("error comunicating with the server")
-      }
-    })
   }
 
   render() {
@@ -109,7 +82,7 @@ class SmartTable extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    global: state.global,
+    ticketsCrud: state.ticketsCrud,
     request: state.request
   }
 }

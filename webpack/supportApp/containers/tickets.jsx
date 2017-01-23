@@ -73,9 +73,7 @@ class Tickets extends React.Component {
 
     this.state = {
       showModal: false,
-      alertMessage: null,
-      tableData: [],
-      record: null
+      alertMessage: null
     }
   }
 
@@ -133,7 +131,21 @@ class Tickets extends React.Component {
   }
 
   componentDidMount() {
-    this.setModalState()
+    //this.setModalState()
+    this.loadRecords()
+  }
+
+  loadRecords(statusFilter=null) {
+    this.props.requestActions.getRequest("tickets/", {
+      auth_token: this.props.session.authToken,
+      scope: statusFilter
+    }, (response) => {
+      if (response) {
+        this.props.globalActions.updateTickets(response.data.records)
+      } else {
+        alert("error comunicating with the server")
+      }
+    })
   }
 
   createTicket() {
@@ -141,7 +153,7 @@ class Tickets extends React.Component {
     if (formFields) { // if validation fails, value will be null
 
       this.props.requestActions.postRequest("tickets/", {
-        auth_token: this.props.global.authToken,
+        auth_token: this.props.session.authToken,
         ticket: {
           ...formFields
         }
@@ -154,7 +166,6 @@ class Tickets extends React.Component {
             alertStyle: "success"
           })
           browserHistory.push("/tickets")
-          this.refreshTable()
         } else {
           this.showErrors()
         }
@@ -296,11 +307,11 @@ class Tickets extends React.Component {
 
   handleFilterChange(e) {
     let statusFilter = e.target.value
-    this.refs.smartTable.getWrappedInstance().refreshTable(statusFilter)
+    this.loadRecords(statusFilter)
   }
 
   filters() {
-    let options = this.props.global.ticketStatuses
+    let options = this.props.visual.ticketStatuses
     options = options.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
     return(
       <div className="col-md-3">
@@ -317,7 +328,7 @@ class Tickets extends React.Component {
               {this.flashMessages()}
               <div className="row">
                 <h2>Tickets</h2>
-                <SmartTable ref="smartTable" showAction={ this.showRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
+                <SmartTable showAction={ this.showRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
                 { this.showActionModal() }
               </div>
             </div>
@@ -327,7 +338,8 @@ class Tickets extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    global: state.global,
+    session: state.session,
+    visual: state.visual,
     request: state.request
   }
 }
