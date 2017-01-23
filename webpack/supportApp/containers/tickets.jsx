@@ -62,9 +62,14 @@ class Tickets extends React.Component {
     this.closeModal   = this.closeModal.bind(this)
     this.setModalState = this.setModalState.bind(this)
     this.getModalSettings = this.getModalSettings.bind(this)
-    this.newRecord = this.newRecord.bind(this)
-    this.showRecord = this.showRecord.bind(this)
-    this.createTicket = this.createTicket.bind(this)
+
+    this.onNewRecord = this.onNewRecord.bind(this)
+    this.onShowRecord = this.onShowRecord.bind(this)
+
+    this._newRecordView = this._newRecordView.bind(this)
+    this._showRecordView = this._showRecordView.bind(this)
+
+    this.createRecord = this.createRecord.bind(this)
 
     this.flashMessages = this.flashMessages.bind(this)
     this.onDismissFlash = this.onDismissFlash.bind(this)
@@ -73,7 +78,8 @@ class Tickets extends React.Component {
 
     this.state = {
       showModal: false,
-      alertMessage: null
+      alertMessage: null,
+      modalContentType: 'new'
     }
   }
 
@@ -109,7 +115,7 @@ class Tickets extends React.Component {
     browserHistory.push("/tickets")
   }
 
-  newRecord() {
+  onNewRecord() {
     browserHistory.push("/tickets/new")
     this.setState({
       ...this.state,
@@ -119,7 +125,7 @@ class Tickets extends React.Component {
     })
   }
 
-  showRecord(row) {
+  onShowRecord(row) {
     browserHistory.push(`/tickets/${row.id}`)
     this.setState({
       ...this.state,
@@ -131,8 +137,8 @@ class Tickets extends React.Component {
   }
 
   componentDidMount() {
-    //this.setModalState()
     this.loadRecords()
+    this.setModalState()
   }
 
   loadRecords(statusFilter = null) {
@@ -150,7 +156,7 @@ class Tickets extends React.Component {
     this.props.globalActions.updateFilter(statusFilter)
   }
 
-  createTicket() {
+  createRecord() {
     var formFields = this.refs.form.getValue();
     if (formFields) { // if validation fails, value will be null
 
@@ -212,18 +218,35 @@ class Tickets extends React.Component {
     return newObject;
   }
 
-  setModalState(){
+  setModalState() {
     let settings = this.getModalSettings(this.props.route.path)
-    this.setState({
-      ...this.state,
-      showModal: settings.open,
-      modalTitle: settings.title,
-      modalContentType: settings.modalContentType
-    })
+
+    if (this.props.params.id) {
+      this.props.requestActions.getRequest(`tickets/${this.props.params.id}/`, {
+        auth_token: this.props.session.authToken
+      }, (response) => {
+        if (response) {
+          this.setState({
+            ...this.state,
+            showModal: settings.open,
+            modalTitle: settings.title,
+            modalContentType: settings.modalContentType,
+            record: response.data
+          })
+        }
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        showModal: settings.open,
+        modalTitle: settings.title,
+        modalContentType: settings.modalContentType
+      })
+    }
   }
 
   getModalSettings(path) {
-    let settings = {open:false}
+    let settings = {open:false, modalContentType: "new"}
     switch(path){
       case "/tickets/new":
         settings = {
@@ -245,6 +268,15 @@ class Tickets extends React.Component {
 
   modalBody() {
     if (this.state.modalContentType == "new") {
+      return this._newRecordView()
+    } else {
+      if (this.state.modalContentType == "show") {
+        return this._showRecordView()
+      }
+    }
+  }
+
+  _newRecordView() {
       return (
         <span>
           <Modal.Body>
@@ -259,37 +291,38 @@ class Tickets extends React.Component {
           <Modal.Footer>
             <span>
               <Button onClick={this.closeModal}>Cancel</Button>
-              <Button onClick={this.createTicket} bsStyle="primary">Save & Close</Button>
+              <Button onClick={this.createRecord} bsStyle="primary">Save & Close</Button>
             </span>
           </Modal.Footer>
         </span>
       )
-    } else {
-      if (this.state.modalContentType == "show") {
-        return(<span>
-          <Modal.Body>
-            <div className="record-show">
-              <div className="row">
-                <div className="col-md-6 text-right">Subject:</div><div className="col-md-6">{this.state.record.subject}</div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 text-right">Status:</div><div className="col-md-6">{this.state.record.status}</div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 text-right">Description:</div><div className="col-md-6">{this.state.record.description}</div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 text-right">Emergency Level:</div><div className="col-md-6">{this.state.record.emergency_level}</div>
-              </div>
+  }
+
+  _showRecordView(){
+    if (this.state.record) {
+      return(<span>
+        <Modal.Body>
+          <div className="record-show">
+            <div className="row">
+              <div className="col-md-6 text-right">Subject:</div><div className="col-md-6">{this.state.record.subject}</div>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <span>
-              <Button onClick={this.closeModal}>Close</Button>
-            </span>
-          </Modal.Footer>
-        </span>)
-      }
+            <div className="row">
+              <div className="col-md-6 text-right">Status:</div><div className="col-md-6">{this.state.record.status}</div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 text-right">Description:</div><div className="col-md-6">{this.state.record.description}</div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 text-right">Emergency Level:</div><div className="col-md-6">{this.state.record.emergency_level}</div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <span>
+            <Button onClick={this.closeModal}>Close</Button>
+          </span>
+        </Modal.Footer>
+      </span>)
     }
   }
 
@@ -305,7 +338,7 @@ class Tickets extends React.Component {
   }
 
   collectionActions() {
-    return(<Button onClick={this.newRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>)
+    return(<Button onClick={this.onNewRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>)
   }
 
   handleFilterChange(e) {
@@ -331,7 +364,7 @@ class Tickets extends React.Component {
               {this.flashMessages()}
               <div className="row">
                 <h2>Tickets</h2>
-                <SmartTable showAction={ this.showRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
+                <SmartTable showAction={ this.onShowRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
                 { this.showActionModal() }
               </div>
             </div>
