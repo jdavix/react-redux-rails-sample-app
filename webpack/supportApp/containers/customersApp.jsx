@@ -9,7 +9,7 @@ import getInitialState from '../store/initialState'
 import Tickets from './tickets'
 
 import CustomerMyAccount from './customerMyAccount'
-import DashboardWrapper from '../components/dashboardWrapper'
+import customersDashboard from '../components/customersDashboard'
 
 import * as globalActions from '../actions/global'
 
@@ -27,7 +27,7 @@ export default class CustomersApp extends React.Component {
       <Provider store={store}>
         <Router history={history}>
 
-          <Route path="/" component={DashboardWrapper} >
+          <Route path="/" component={customersDashboard} >
             <IndexRedirect to="/tickets" />
             <Route path="/tickets" component={Tickets} />
             <Route path="/tickets/new" component={Tickets} />

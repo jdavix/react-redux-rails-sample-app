@@ -54,6 +54,7 @@ class SmartTable extends React.Component {
                    sortable={['subject', 'status', 'created_at']}
                    defaultSort={{column: 'created_at', direction: 'desc'}}
                    itemsPerPage={10}
+                   pageButtonLimit={5}
                    noDataText="no records found"
             >
               <Thead>
@@ -94,4 +95,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, {withRef:true})(SmartTable)
+export default connect(mapStateToProps, mapDispatchToProps)(SmartTable)

@@ -14,10 +14,8 @@
 
   <body>
     <div class="container-fluid">
-      <div class="row" id="app-container" data-session-token="<%= current_customer.auth_token %>">
-
-      </div>
+      <%= yield %>
     </div>
-     <%= javascript_include_tag *webpack_asset_paths("application") %>
+     <%= javascript_include_tag *webpack_asset_paths(@namespace) %>
   </body>
 </html>

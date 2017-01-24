@@ -54,7 +54,7 @@ class Api::V1::BaseController < ActionController::Base
 
   def authenticate_resource(resource_identifier)
     if current_resource(resource_identifier).blank?
-      response_error(message: 'Invalid Credentials.', status: 401) and return
+      error_response(message: 'Invalid Credentials.', status: 401) and return
     end
   end
 

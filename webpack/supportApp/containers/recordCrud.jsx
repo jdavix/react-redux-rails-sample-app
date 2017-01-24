@@ -152,7 +152,7 @@ class RecordCrud extends React.Component {
     let settings = this.getModalSettings(this.props.route.path)
 
     if (this.props.params.id) {
-      this.props.requestActions.getRequest(`tickets/${this.props.params.id}/`, {
+      this.props.requestActions.getRequest(`${this._indexPath()}/${this.props.params.id}/`, {
         auth_token: this.props.session.authToken
       }, (response) => {
         if (response) {
@@ -307,6 +307,8 @@ class RecordCrud extends React.Component {
 
   //initial data load
   componentDidMount() {
+    console.log("INDEX:")
+    console.log(this._indexPath())
     this.loadRecords()
     this.setModalState()
   }
@@ -314,7 +316,7 @@ class RecordCrud extends React.Component {
   //it queries the server for updating the main table view
   loadRecords(statusFilter = null) {
     statusFilter = statusFilter || this.props.visual.selectedFilter
-    this.props.requestActions.getRequest("tickets/", {
+    this.props.requestActions.getRequest(this._indexPath(), {
       auth_token: this.props.session.authToken,
       scope: statusFilter
     }, (response) => {
@@ -332,7 +334,7 @@ class RecordCrud extends React.Component {
     var formFields = this.refs.form.getValue();
     if (formFields) { // if validation fails, value will be null
 
-      this.props.requestActions.postRequest("tickets/", {
+      this.props.requestActions.postRequest(this._indexPath(), {
         auth_token: this.props.session.authToken,
         ticket: {
           ...formFields
@@ -393,7 +395,9 @@ class RecordCrud extends React.Component {
 
   //content to send to smartTable component for displaying collection actions
   collectionActions() {
-    return(<Button onClick={this.onNewRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>)
+    if (this.props.hideCollectionActions !=true) {
+      return(<Button onClick={this.onNewRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>)
+    }
   }
 
   //status select change handler

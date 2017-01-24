@@ -1,14 +1,15 @@
 class Api::V1::TicketsController < Api::V1::BaseController
 
   before_action do
-    authenticate_resource(:customer)
+    authenticate
   end
 
   def index
-    scope = params[:scope]
-    scope = "all" if scope.blank?
-    if Ticket.scopes.include?(scope.to_sym)
-      @tickets = current_customer.tickets.send(scope.to_sym)
+    filter = params[:scope]
+    filter = "all" if filter.blank?
+    filter = filter.to_sym
+    if Ticket.scopes.include?(filter)
+      @tickets = scope.send(filter)
       standard_response(data: @tickets, serializer: TicketSerializer)
     else
       error_response(message: "invalid scope", status: 500)
@@ -30,8 +31,17 @@ class Api::V1::TicketsController < Api::V1::BaseController
   end
 
   def show
-    @ticket = current_customer.tickets.find(params[:id])
+    @ticket = scope.find(params[:id])
     standard_response(data: @ticket, serializer: TicketSerializer)
+  end
+
+
+  def authenticate
+    authenticate_resource(:customer)
+  end
+
+  def scope
+    current_customer.tickets
   end
 
   private
