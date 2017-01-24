@@ -12,6 +12,8 @@ Rails.application.routes.draw do
       namespace :admin_users do
         resources :tickets, only:[:create, :index, :update, :show] do
         end
+        resources :support_admins do
+        end
       end
     end
   end
@@ -21,7 +23,7 @@ Rails.application.routes.draw do
 
   root to: redirect("/customer_portal/")
 
-  get '/admin/*path', to: 'support_admin/base#index'
-  get 'admin/', to: 'support_admin/base#index'
+  get '/admin_users/*path', to: 'support_admin/base#index'
+  get 'admin_users/', to: 'support_admin/base#index'
 
 end

@@ -7,7 +7,6 @@ this component can't be an stateless since need to delegate access to routes to 
 */
 export default class TicketsCrud extends React.Component {
   render(){
-    console.log("hello")
     return(<FullCrud title="Tickets" 
                      collectionName="admin_users/tickets"
                      hideCollectionActions={true}

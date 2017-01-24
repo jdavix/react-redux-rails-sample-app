@@ -28,14 +28,14 @@ export default class CustomersApp extends React.Component {
         <Router history={history}>
 
           <Route path="/admin" component={adminsDashboard} >
-            <IndexRedirect to="/admin/tickets" />
-            <Route path="/admin/tickets" component={AdminTickets} />
-            <Route path="/admin/tickets/new" component={AdminTickets} />
-            <Route path="/admin/tickets/:id" component={AdminTickets} />
+            <IndexRedirect to="/admin_users/tickets" />
+            <Route path="/admin_users/tickets" component={AdminTickets} />
+            <Route path="/admin_users/tickets/new" component={AdminTickets} />
+            <Route path="/admin_users/tickets/:id" component={AdminTickets} />
 
-            <Route path="/admin/support_admins" component={SupportAdmins} />
-            <Route path="/admin/support_admins/new" component={SupportAdmins} />
-            <Route path="/admin/support_admins/:id" component={SupportAdmins} />
+            <Route path="/admin_users/support_admins" component={SupportAdmins} />
+            <Route path="/admin_users/support_admins/new" component={SupportAdmins} />
+            <Route path="/admin_users/support_admins/:id" component={SupportAdmins} />
           </Route>
 
 

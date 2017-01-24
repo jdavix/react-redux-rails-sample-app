@@ -2,8 +2,9 @@ import React from 'react'
 import DashboardWrapper from './dashboardWrapper'
 
 const menuOptions = [
-  {path: "/admin/tickets", label:"Tickets" , iconClass: "fa-question-circle"},
-  {path: "/admin/my-account", label:"My Account" , iconClass: "fa-user"}
+  {path: "/admin_users/tickets", label:"Tickets" , iconClass: "fa-question-circle"},
+  {path: "/admin_users/support_admins", label:"Support Admin Users" , iconClass: "fa-users"},
+  {path: "/admin_users/my-account", label:"My Account" , iconClass: "fa-user"}
 ]
 
 const AdminDashboard = (props) => {

@@ -10,8 +10,6 @@ export default class SideMenu extends React.Component {
 
 
   showOptions() {
-    console.log("showing options")
-    console.log(this.props.options)
     if (this.props.options) {
       let items = this.props.options.map((item)=>{
                     let iconClass = `item-icon fa ${item.iconClass}`

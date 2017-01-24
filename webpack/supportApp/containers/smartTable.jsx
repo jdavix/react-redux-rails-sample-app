@@ -17,7 +17,44 @@ class SmartTable extends React.Component {
     super(props)
 
     this.displayTableData = this.displayTableData.bind(this)
+    this.displayTableHeader = this.displayTableHeader.bind(this)
+    this._tableRow = this._tableRow.bind(this)
+    this._titleFor = this._titleFor.bind(this)
+  }
 
+
+  _tableRow(row) {
+    let result = []
+    let attribute = null
+    for (attribute in row) {
+      if (attribute!="id") {
+        result.push(<Td key={row.id} column={attribute}>{row[attribute]}</Td>)
+      }
+    }
+    return result
+  }
+
+  _titleFor(field){
+    let title = field.split("_")
+    return title.join(" ")
+  }
+
+  displayTableHeader() {
+    let result = []
+    let fieldsFromRecord = this.props.ticketsCrud.items[0]
+    if (fieldsFromRecord) {
+      for (let field in fieldsFromRecord) {
+        let title = this._titleFor(field)
+        if (field!="id") {
+          result.push(<Th key={fieldsFromRecord.id} column={field}><span>{title}</span></Th>)
+        }
+      }
+      return(
+        <Thead>
+          { result }
+        </Thead>
+      )
+    }
   }
 
   displayTableData() {
@@ -25,9 +62,7 @@ class SmartTable extends React.Component {
     return (data.map((row) => {
     return (
         <Tr key={row.id}>
-            <Td column="created_at">{row.created_at}</Td>
-            <Td column="subject">{row.subject}</Td>
-            <Td column="status">{row.status}</Td>
+            { this._tableRow(row) }
             <Td column="id">
               <span>
                 <a onClick={ () => this.props.showAction(row) }>View</a>
@@ -57,21 +92,9 @@ class SmartTable extends React.Component {
                    pageButtonLimit={5}
                    noDataText="no records found"
             >
-              <Thead>
-                <Th column="created_at">
-                  <span>Created At</span>
-                </Th>
-                <Th column="subject">
-                  <span>Subject</span>
-                </Th>
-                <Th column="status">
-                  <span>Status</span>
-                </Th>
-                <Th column="id">
-                  Action
-                </Th>
-              </Thead>
+              {this.displayTableHeader()}
               {this.displayTableData()}
+              }
             </Table>
           )
         }
