@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as globalActions from '../actions/global'
 import * as requestActions from '../actions/request'
+
 import { browserHistory } from 'react-router'
 import { Link } from 'react-router'
 import {Table, Thead, Th, Tr, Td} from 'reactable'
@@ -36,11 +37,6 @@ class RecordCrud extends React.Component {
 
     this.handleFilterChange = this.handleFilterChange.bind(this)
 
-    this.state = {
-      showModal: false,
-      alertMessage: null,
-      modalContentType: 'new'
-    }
   }
 
   /*
@@ -91,12 +87,12 @@ class RecordCrud extends React.Component {
    @returns {Component} Returns  Flash message visible or invisible
   */
   flashMessages() {
-    if (this.state.alertMessage) {
+    if (this.props.visual.flash.alertMessage) {
       return(
         <div className="row">
-          <Alert bsStyle={this.state.alertStyle} onDismiss={this.onDismissFlash}>
+          <Alert bsStyle={this.props.visual.alertStyle} onDismiss={this.onDismissFlash}>
             <h4>Hey!</h4>
-            <p>{this.state.alertMessage}</p>
+            <p>{this.props.visual.alertMessage}</p>
           </Alert>
         </div>
       )
@@ -106,11 +102,7 @@ class RecordCrud extends React.Component {
   }
 
   onDismissFlash() {
-    this.setState({
-      ...this.state,
-      alertMessage: null,
-      alertStyle: null
-    })
+    this.props.globalActions.updateFlash({alertMessage:null, alertStyle:null})
   }
 
    /* Modal related methods
@@ -124,22 +116,25 @@ class RecordCrud extends React.Component {
         auth_token: this.props.session.authToken
       }, (response) => {
         if (response) {
-          this.setState({
-            ...this.state,
-            showModal: settings.open,
-            modalTitle: settings.title,
-            modalContentType: settings.modalContentType,
-            record: response.data
-          })
+
+          this.props.globalActions.updateViewingRecord(response.data)
+          this.props.globalActions.updateModal(
+            {
+              showModal: settings.open,
+              modalTitle: settings.title,
+              modalContentType: settings.modalContentType,
+            }
+          )
         }
       })
     } else {
-      this.setState({
-        ...this.state,
-        showModal: settings.open,
-        modalTitle: settings.title,
-        modalContentType: settings.modalContentType
-      })
+      this.props.globalActions.updateModal(
+        {
+          showModal: settings.open,
+          modalTitle: settings.title,
+          modalContentType: settings.modalContentType
+        }
+      )
     }
   }
 
@@ -166,43 +161,48 @@ class RecordCrud extends React.Component {
   }
 
   closeModal() {
-    this.setState({
-      ...this.state,
-      showModal: false,
-      modalTitle:null
-    })
+    this.props.globalActions.updateModal(
+      {
+        showModal: false,
+        modalTitle:null
+      }
+    )
     browserHistory.push(this._indexPath())
   }
 
   // it displays Modal with form for creating new record
   onNewRecord() {
     browserHistory.push(this._newPath())
-    this.setState({
-      ...this.state,
-      showModal: true,
-      modalTitle: this.getModalSettings(this._newPath()).title,
-      modalContentType:'new'
-    })
+    this.props.globalActions.updateModal(
+      {
+        showModal: true,
+        modalTitle: this.getModalSettings(this._newPath()).title,
+        modalContentType:'new'
+      }
+    )
   }
 
   //it displays Modal with record details
   onShowRecord(row) {
     browserHistory.push(this._showPath(row.id))
-    this.setState({
-      ...this.state,
-      showModal: true,
-      modalTitle: this.getModalSettings(`/${this.props.collectionName}/:id`).title,
-      modalContentType:'show',
-      record: row
-    })
+
+    this.props.globalActions.updateViewingRecord(row)
+
+    this.props.globalActions.updateModal(
+      {
+        showModal: true,
+        modalTitle: this.getModalSettings(this._showPath(":id")).title,
+        modalContentType:'show',
+      }
+    )
   }
 
   //it defines the crud view modal body
   modalBody() {
-    if (this.state.modalContentType == "new") {
+    if (this.props.visual.modal.modalContentType == "new") {
       return this._newRecordView()
     } else {
-      if (this.state.modalContentType == "show") {
+      if (this.props.visual.modal.modalContentType == "show") {
         return this._showRecordView()
       }
     }
@@ -211,10 +211,10 @@ class RecordCrud extends React.Component {
   _showRecordContent() {
     let recordFields = []
     let field = null
-    for(field in this.state.record) {
+    for(field in this.props.crud.viewingRecord) {
       recordFields.push(
         <div key={field} className="row">
-          <div className="col-md-6 text-right">{`${field}:`}</div><div className="col-md-6">{this.state.record[field]}</div>
+          <div className="col-md-6 text-right">{`${field}:`}</div><div className="col-md-6">{this.props.crud.viewingRecord[field]}</div>
         </div>
       )
     }
@@ -229,10 +229,11 @@ class RecordCrud extends React.Component {
   @returns {Component} Returns content for the main view modal body
   */
   _showRecordView() {
-    if (this.state.record) {
+    if (this.props.crud.viewingRecord) {
       return(<span>
         <Modal.Body>
           {this._showRecordContent()}
+          {this.props.appendToShowView(this.props.crud.viewingRecord) }
         </Modal.Body>
         <Modal.Footer>
           <span>
@@ -269,9 +270,9 @@ class RecordCrud extends React.Component {
   //modal for main crud view
   showActionModal() {
     return(
-      <Modal show={this.state.showModal } onHide={this.closeModal}>
+      <Modal show={this.props.visual.modal.showModal } onHide={this.closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{this.state.modalTitle}</Modal.Title>
+          <Modal.Title>{this.props.visual.modal.modalTitle}</Modal.Title>
         </Modal.Header>
         { this.modalBody() }
       </Modal>
@@ -312,12 +313,14 @@ class RecordCrud extends React.Component {
         }
       }, (response) => {
         if (response) {
-          this.setState({
-            ...this.state,
-            showModal: false,
+
+          this.props.globalActions.updateModal({showModal:false})
+
+          this.props.globalActions.updateFlash({
             alertMessage: response.metadata.message,
             alertStyle: "success"
-          })
+            })
+
           browserHistory.push(this._indexPath())
           this.loadRecords()
         } else {
@@ -420,6 +423,7 @@ class RecordCrud extends React.Component {
 const mapStateToProps = (state) => {
   return {
     session: state.session,
+    crud: state.ticketsCrud,
     visual: state.visual,
     request: state.request,
     routing: state.routing

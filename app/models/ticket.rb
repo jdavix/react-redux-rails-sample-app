@@ -1,10 +1,14 @@
 class Ticket < ApplicationRecord
+  include AASM
   #Constants:
   STATUSES = {
              "Open" => :sent,
-             "In Progress" => :inprogress, 
+             "In Progress" => :inprogress,
              "Resolved" => :resolved 
            }
+
+  STATUS_ACTIONS = ["start", "resolve"]
+
   SCOPES=STATUSES.values
 
   #Relations:
@@ -12,17 +16,24 @@ class Ticket < ApplicationRecord
   belongs_to :admin_user, optional: true
 
 
-  #Scopes:
-  SCOPES.each{ |state| self.scope(state, ->(){  where(status: state.to_s) }) }
-
   #Validations:
   validates :subject, presence:true
   validates :description, presence:true
 
-  #Callbacks:
-  after_initialize :set_default_values
 
+  aasm column: :status do
+    state :sent, :initial => true
+    state :inprogress, :resolved
 
+    event :start do
+      transitions :from => [:sent], :to => :inprogress
+    end
+
+    event :resolve do
+      transitions :from => [:sent], :to => :resolved
+    end
+
+  end
 
   def self.scopes
     SCOPES + [:all]
@@ -31,10 +42,5 @@ class Ticket < ApplicationRecord
   def status_label
     @status_label ||= STATUSES.invert[self.status.to_sym]
   end
-
-  private
-    def set_default_values
-        self.status = STATUSES["Open"] if !self.status?
-    end
 
 end

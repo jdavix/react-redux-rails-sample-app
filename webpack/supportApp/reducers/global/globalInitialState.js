@@ -6,6 +6,13 @@ const initialState = {
   visual: {
     selectedFilter: "all",
     ticketStatuses: [ {id:"all", value: "All"},{ id: "sent", value: "Open"}, { id: "inprogress", value: "In Progress"}, {id: "resolved", value:"Resolved"} ],
+    modal: {
+      showModal: false,
+      modalContentType: 'new'
+    },
+    flash: {
+      alertMessage: null
+    }
   },
   ticketsCrud: {
     items: [],

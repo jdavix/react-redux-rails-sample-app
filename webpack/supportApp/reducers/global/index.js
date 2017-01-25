@@ -5,7 +5,9 @@ import {
   UPDATE_TICKETS,
   UPDATE_FILTER,
   SHOW_TICKET,
-  USER_LOGOUT
+  USER_LOGOUT,
+  UPDATE_MODAL,
+  UPDATE_FLASH
 } from '../../actions/globalActionTypes'
 /*
 * Reducer Initial State
@@ -60,6 +62,16 @@ let visualReducer = function(state = initialState["visual"], action) {
       return {
         ...state,
         selectedFilter: action.filter
+      }
+    case UPDATE_MODAL:
+      return {
+        ...state,
+        modal: action.modal
+      }
+    case UPDATE_FLASH:
+      return {
+        ...state,
+        flash: action.flash
       }
   }
   return state

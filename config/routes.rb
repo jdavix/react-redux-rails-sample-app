@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       end
       namespace :admin_users do
         resources :tickets, only:[:create, :index, :update, :show] do
+          post :update_status, on: :member
         end
         resources :support_admins do
         end

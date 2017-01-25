@@ -49,7 +49,9 @@ export default class SupportAdminsCrud extends React.Component {
                      formOptions={AdminFormOptions}
                      hideFilters={true}
                      title="Support Admin Users"
-                     collectionName="admin_users/support_admins" {...this.props }
+                     namespace="admin_users"
+                     useNamespaceOnRequest={true}
+                     collectionName="support_admins" {...this.props }
            />
           )
   }

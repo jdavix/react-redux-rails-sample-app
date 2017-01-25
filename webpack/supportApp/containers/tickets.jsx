@@ -43,10 +43,10 @@ const ticketFormOptions = {
 export default class TicketsCrud extends React.Component {
   render(){
     return(<Crud namespace="customer_portal"
-                 formTitle="Open New Ticket" 
-                 formType={TicketFormSchema} 
-                 formOptions={ticketFormOptions} 
-                 title="Tickets" 
+                 formTitle="Open New Ticket"
+                 formType={TicketFormSchema}
+                 formOptions={ticketFormOptions}
+                 title="Tickets"
                  collectionName="tickets"
                  useNamespaceOnRequest={false}
                  { ...this.props }
