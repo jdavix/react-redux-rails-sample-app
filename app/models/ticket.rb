@@ -30,7 +30,7 @@ class Ticket < ApplicationRecord
     end
 
     event :resolve do
-      transitions :from => [:sent], :to => :resolved
+      transitions :from => [:inprogress], :to => :resolved
     end
 
   end

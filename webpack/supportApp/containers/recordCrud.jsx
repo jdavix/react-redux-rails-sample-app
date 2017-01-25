@@ -233,7 +233,7 @@ class RecordCrud extends React.Component {
       return(<span>
         <Modal.Body>
           {this._showRecordContent()}
-          {this.props.appendToShowView(this.props.crud.viewingRecord) }
+          {this.props.appendToShowView ? this.props.appendToShowView(this.props.crud.viewingRecord) : null}
         </Modal.Body>
         <Modal.Footer>
           <span>

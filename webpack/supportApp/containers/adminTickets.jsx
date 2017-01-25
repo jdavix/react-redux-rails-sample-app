@@ -27,15 +27,18 @@ class TicketsCrud extends React.Component {
       status_action: transitionAction[ticket.status],
       ...options
     }, (response) => {
+      this.props.globalActions.updateModal({showModal:false})
     })
   }
 
   manageTicket(ticket) {
-    return(
-      <div className="row text-center">
-        <a className="btn btn-lg btn-primary" onClick={ ()=>{this.updateTicket(ticket)} }>{transitionAction[ticket.status]}</a>
-      </div>
-    )
+    if (transitionAction[ticket.status]) {
+      return(
+        <div className="row text-center">
+          <a className="btn btn-lg btn-primary" onClick={ ()=>{this.updateTicket(ticket)} }>{transitionAction[ticket.status]}</a>
+        </div>
+      )
+    }
   }
 
   render(){
