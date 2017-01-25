@@ -145,6 +145,7 @@ class RecordCrud extends React.Component {
 
   getModalSettings(path) {
     let settings = {open:false, modalContentType: "new"}
+
     switch(path){
       case (this._newPath()):
         settings = {
@@ -153,7 +154,7 @@ class RecordCrud extends React.Component {
           modalContentType: 'new'
         }
         break;
-      case `/${this.props.collectionName}/:id`:
+      case (this._showPath(":id")):
         settings = {
           title: "Details",
           open: true,
@@ -379,19 +380,30 @@ class RecordCrud extends React.Component {
   //status filter select
   filters() {
     //NOTE: pending to add support for custom filters per collection type
+    console.log("selected filter")
+    console.log(this.props.visual.selectedFilter)
     if (this.props.hideFilters != true) {
       let options = this.props.visual.ticketStatuses
-      options = options.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
+      options = options.map(
+                              (item) => {
+                                return (
+                                  <option key={item.id}
+                                          value={item.id}
+                                  >
+                                    {item.value}
+                                  </option>
+                                )
+                              } 
+                           )
       return(
         <div className="col-md-3">
           <span>Filter by Status: </span>
-          <select className="form-control" onChange={this.handleFilterChange}>
+          <select className="form-control" onChange={this.handleFilterChange} defaultValue={this.props.visual.selectedFilter}>
             {options}
           </select>
         </div>
       )
     }
-
   }
 
   render () {
