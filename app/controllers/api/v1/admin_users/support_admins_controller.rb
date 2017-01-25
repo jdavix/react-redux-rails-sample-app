@@ -18,7 +18,7 @@ class Api::V1::AdminUsers::SupportAdminsController < Api::V1::BaseController
                         status: 201)
     else
       error_response(message: @support_admin.errors.full_messages.to_sentence,
-                     fields_errors: @support_admin.errors.full_messages, status: 422)
+                     fields_errors: @support_admin.errors_hash, status: 422)
     end
   end
 
@@ -35,7 +35,7 @@ class Api::V1::AdminUsers::SupportAdminsController < Api::V1::BaseController
   private
 
     def support_admin_params
-      params.require(:ticket).permit(
+      params.require(:record).permit(
         :email,
         :role,
         :password,

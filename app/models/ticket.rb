@@ -13,7 +13,7 @@ class Ticket < ApplicationRecord
 
   #Relations:
   belongs_to :customer
-  belongs_to :admin_user, optional: true
+  belongs_to :support_admin, optional: true
 
 
   #Validations:

@@ -6,6 +6,7 @@ class Api::V1::AdminUsers::TicketsController < Api::V1::TicketsController
     if Ticket::STATUS_ACTIONS.include?(params[:status_action])
       if params[:status_action].present?
         @ticket.answer = params[:answer] if params[:answer].present?
+        @ticket.support_admin = current_support_admin if params[:status_action] == "start"
         @ticket.send("#{ params[:status_action] }!".to_sym)
         standard_response(data: @ticket, serializer: TicketSerializer)
       else

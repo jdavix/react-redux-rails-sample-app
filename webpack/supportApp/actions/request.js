@@ -51,18 +51,16 @@ export function postRequest(path, params, actionsCallback) {
 
           dispatch( requestSuccess( json.data ) )
 
-          //NOTE: pending to dispatch also custom action
-
           actionsCallback(json)
 
         } else {
-          dispatch( requestFailure( response.data ) )
+          dispatch( requestFailure( response.data.data ) )
           actionsCallback(null)
         }
         
       })
       .catch( (error) => {
-        dispatch( requestFailure({errors: error.message}) )
+        dispatch( requestFailure(error.response.data) )
         actionsCallback(null)
       })
   }

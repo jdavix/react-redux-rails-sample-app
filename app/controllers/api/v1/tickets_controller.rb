@@ -47,7 +47,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
   private
 
     def ticket_params
-      params.require(:ticket).permit(
+      params.require(:record).permit(
         :subject,
         :description,
         :emergency_level

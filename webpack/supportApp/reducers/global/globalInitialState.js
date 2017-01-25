@@ -11,6 +11,7 @@ const initialState = {
       modalContentType: 'new'
     },
     flash: {
+      alertStyle:'success',
       alertMessage: null
     }
   },

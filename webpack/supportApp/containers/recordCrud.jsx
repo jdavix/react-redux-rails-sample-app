@@ -32,10 +32,17 @@ class RecordCrud extends React.Component {
 
     this.createRecord = this.createRecord.bind(this)
 
+    this.onChangeForm = this.onChangeForm.bind(this)
+
     this.flashMessages = this.flashMessages.bind(this)
     this.onDismissFlash = this.onDismissFlash.bind(this)
 
     this.handleFilterChange = this.handleFilterChange.bind(this)
+
+    this.state = {
+      formOptions: this.props.formOptions,
+      formValue: {}
+    }
 
   }
 
@@ -90,9 +97,9 @@ class RecordCrud extends React.Component {
     if (this.props.visual.flash.alertMessage) {
       return(
         <div className="row">
-          <Alert bsStyle={this.props.visual.alertStyle} onDismiss={this.onDismissFlash}>
+          <Alert bsStyle={this.props.visual.flash.alertStyle} onDismiss={this.onDismissFlash}>
             <h4>Hey!</h4>
-            <p>{this.props.visual.alertMessage}</p>
+            <p>{this.props.visual.flash.alertMessage}</p>
           </Alert>
         </div>
       )
@@ -167,6 +174,11 @@ class RecordCrud extends React.Component {
         modalTitle:null
       }
     )
+    this.setState({
+      ...this.state,
+      formOptions: this.props.formOptions,
+      formValue: {}
+    })
     browserHistory.push(this._indexPath())
   }
 
@@ -243,6 +255,13 @@ class RecordCrud extends React.Component {
       </span>)
     }
   }
+  //this function is for preserving the entering info in the form
+  onChangeForm(value) {
+    this.setState({
+      ...this.state,
+      formValue: value
+    })
+  }
 
   //to puplate modal body with form view
   _newRecordView() {
@@ -253,7 +272,9 @@ class RecordCrud extends React.Component {
               <t.form.Form
                 ref="form"
                 type={this.props.formType}
-                options={this.props.formOptions}
+                options={this.state.formOptions}
+                value={this.state.formValue}
+                onChange={this.onChangeForm}
               />
             </form>
           </Modal.Body>
@@ -308,18 +329,23 @@ class RecordCrud extends React.Component {
 
       this.props.requestActions.postRequest(this._indexPath(this.props.useNamespaceOnRequest), {
         auth_token: this.props.session.authToken,
-        ticket: {
+        record: {
           ...formFields
         }
       }, (response) => {
         if (response) {
-
           this.props.globalActions.updateModal({showModal:false})
 
           this.props.globalActions.updateFlash({
             alertMessage: response.metadata.message,
             alertStyle: "success"
             })
+
+          this.setState({
+            ...this.state,
+            formValue: {},
+            formOptions: this.props.formOptions
+          })
 
           browserHistory.push(this._indexPath())
           this.loadRecords()
@@ -332,25 +358,27 @@ class RecordCrud extends React.Component {
 
   //populate form with errors if the server gives us each field error
   showErrors(){
-    var jsonError= this.props.request.errorResponse
+    let jsonError= this.props.request.errorResponse
+
     if (jsonError) {
 
-      if (typeof jsonError.errors  === 'string' ) {
-        alert(jsonError.errors)
-      } else {
-        field_errors = jsonError.metadata.fields_errors
+      if ( jsonError.meta ) {
+        let field_errors = jsonError.meta.fields_errors
         this.setState({
           ...this.state,
-          options: {
-            fields: this._addErrorsToFields(this.state.options.fields, field_errors)
+          formOptions: {
+            fields: this._addErrorsToFields(this.state.formOptions.fields, field_errors)
           }
         })
+      } else {
+        this.props.visual.updateModal({showModal:false})
+        this.props.visual.updateFlash({alertMessage: jsonError.errors, alertStyle: 'danger'})
       }
     }
   }
 
   _addErrorsToFields(formFields, errors) {
-    newObject = {}
+    let newObject = {}
     for (var key in formFields) {
       if (errors[key]) {
         newObject[key] = {
