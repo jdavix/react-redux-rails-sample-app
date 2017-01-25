@@ -12,6 +12,8 @@ import Spinner from 'react-activity/lib/Spinner'
 
 import { browserHistory } from 'react-router'
 
+import * as utils from '../lib/utils'
+
 class SmartTable extends React.Component {
   constructor(props) {
     super(props)
@@ -43,21 +45,25 @@ class SmartTable extends React.Component {
     return result
   }
 
-  _titleFor(field){
-    let title = field.split("_")
-    return title.join(" ")
-  }
-
+  //it generates table header
   displayTableHeader() {
     let result = []
-    let fieldsFromRecord = this.props.ticketsCrud.items[0]
-    if (fieldsFromRecord) {
-      for (let field in fieldsFromRecord) {
-        let title = this._titleFor(field)
+    let fields = null
+
+    //use props visible columns setting or show all attributes in table
+    if (this.props.tableColumns) {
+      fields = this.props.tableColumns
+    } else {
+      fields = Object.keys(this.props.ticketsCrud.items[0])
+    }
+
+    if (fields) {
+      fields.forEach((field)=>{
+        let title = utils.titleFor(field)
         if (field!="id") {
           result.push(<Th key={field} column={field}><span>{title}</span></Th>)
         }
-      }
+      })
       result.push(<Th key="id" column="id"><span>Actions</span></Th>)
       return(
         <Thead>

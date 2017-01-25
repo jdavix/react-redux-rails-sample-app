@@ -51,6 +51,7 @@ export default class SupportAdminsCrud extends React.Component {
                      title="Support Admin Users"
                      namespace="admin_users"
                      useNamespaceOnRequest={true}
+                     tableColumns={["created_at", "email", "last_sign_in_at"]}
                      collectionName="support_admins" {...this.props }
            />
           )

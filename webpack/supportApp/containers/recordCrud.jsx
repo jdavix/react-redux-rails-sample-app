@@ -440,7 +440,7 @@ class RecordCrud extends React.Component {
               {this.flashMessages()}
               <div className="row">
                 <h2>{this.props.title}</h2>
-                <SmartTable showAction={ this.onShowRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
+                <SmartTable tableColumns={this.props.tableColumns} showAction={ this.onShowRecord } filters={ this.filters() } collectionActions={ this.collectionActions() }/>
                 { this.showActionModal() }
               </div>
             </div>

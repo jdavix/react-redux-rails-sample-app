@@ -46,6 +46,7 @@ export default class TicketsCrud extends React.Component {
                  formTitle="Open New Ticket"
                  formType={TicketFormSchema}
                  formOptions={ticketFormOptions}
+                 tableColumns={["created_at", "subject", "status_label", "support_admin"]}
                  title="Tickets"
                  collectionName="tickets"
                  useNamespaceOnRequest={false}

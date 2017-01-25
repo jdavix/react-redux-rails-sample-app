@@ -9,4 +9,8 @@ class TicketSerializer < ActiveModel::Serializer
     object.support_admin.try(:email)
   end
 
+  def created_at
+    object.created_at.strftime("%a, %B %d %H:%M - %Y ")
+  end
+
 end

@@ -55,6 +55,7 @@ class TicketsCrud extends React.Component {
     return(<FullCrud title="Tickets"
                      namespace="admin_users"
                      collectionName="tickets"
+                     tableColumns={["created_at", "subject", "status_label", "support_admin"]}
                      hideCollectionActions={true}
                      useNamespaceOnRequest={true}
                      appendToShowView={this.manageTicket}
