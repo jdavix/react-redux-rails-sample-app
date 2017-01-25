@@ -38,6 +38,7 @@ class TicketsCrud extends React.Component {
       this.props.globalActions.updateFlash({alertMessage: `Ticket #${ticket.id} moved to ${transitionToSection[transition]}`,
                                             alertStyle: "success"
                                            })
+      browserHistory.push("/admin_users/tickets")
     })
   }
 
@@ -55,7 +56,7 @@ class TicketsCrud extends React.Component {
     return(<FullCrud title="Tickets"
                      namespace="admin_users"
                      collectionName="tickets"
-                     tableColumns={["created_at", "subject", "status_label", "support_admin"]}
+                     tableColumns={["id", "created_at", "subject", "status_label", "support_admin"]}
                      hideCollectionActions={true}
                      useNamespaceOnRequest={true}
                      appendToShowView={this.manageTicket}

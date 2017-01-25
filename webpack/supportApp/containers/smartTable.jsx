@@ -25,7 +25,7 @@ class SmartTable extends React.Component {
 
   _itemActions(row) {
     return(
-      <Td key="id" column="id">
+      <Td key="actions" column="actions">
         <span>
           <a onClick={ () => this.props.showAction(row) }>View</a>
         </span>
@@ -37,9 +37,7 @@ class SmartTable extends React.Component {
     let result = []
     let attribute = null
     for (attribute in row) {
-      if (attribute!="id") {
-        result.push(<Td key={attribute} column={attribute}>{row[attribute]}</Td>)
-      }
+      result.push(<Td key={attribute} column={attribute}>{row[attribute]}</Td>)
     }
     result.push(this._itemActions(row))
     return result
@@ -60,11 +58,9 @@ class SmartTable extends React.Component {
     if (fields) {
       fields.forEach((field)=>{
         let title = utils.titleFor(field)
-        if (field!="id") {
-          result.push(<Th key={field} column={field}><span>{title}</span></Th>)
-        }
+        result.push(<Th key={field} column={field}><span>{title}</span></Th>)
       })
-      result.push(<Th key="id" column="id"><span>Actions</span></Th>)
+      result.push(<Th key="actions" column="actions"><span></span></Th>)
       return(
         <Thead>
           { result }
