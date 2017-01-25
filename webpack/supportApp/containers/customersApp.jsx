@@ -27,12 +27,12 @@ export default class CustomersApp extends React.Component {
       <Provider store={store}>
         <Router history={history}>
 
-          <Route path="/" component={customersDashboard} >
-            <IndexRedirect to="/tickets" />
-            <Route path="/tickets" component={Tickets} />
-            <Route path="/tickets/new" component={Tickets} />
-            <Route path="/tickets/:id" component={Tickets} />
-            <Route path="/my-account" component={CustomerMyAccount} />
+          <Route path="/customer_portal" component={customersDashboard} >
+            <IndexRedirect to="/customer_portal/tickets" />
+            <Route path="/customer_portal/tickets" component={Tickets} />
+            <Route path="/customer_portal/tickets/new" component={Tickets} />
+            <Route path="/customer_portal/tickets/:id" component={Tickets} />
+            <Route path="/customer_portal/my-account" component={CustomerMyAccount} />
           </Route>
 
 

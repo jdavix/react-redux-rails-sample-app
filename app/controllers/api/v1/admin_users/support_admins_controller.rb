@@ -5,14 +5,14 @@ class Api::V1::AdminUsers::SupportAdminsController < Api::V1::BaseController
   end
 
   def index
-    @support_admins = SupportAdmin.where("id not in ?", [current_support_admin.id])
+    @support_admins = SupportAdmin.where.not(id: current_support_admin.id)
     standard_response(data: @support_admins, serializer: SupportAdminSerializer)
   end
 
   def create
     @support_admin= SupportAdmin.new(support_admin_params)
     if @support_admin.save
-      standard_response(message: "ticket successfully sent",
+      standard_response(message: "Support Admin User successfully created",
                         data: @support_admin,
                         serializer: SupportAdminSerializer,
                         status: 201)
@@ -37,6 +37,7 @@ class Api::V1::AdminUsers::SupportAdminsController < Api::V1::BaseController
     def support_admin_params
       params.require(:ticket).permit(
         :email,
+        :role,
         :password,
         :password_confirmation
       )

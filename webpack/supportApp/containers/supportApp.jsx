@@ -8,6 +8,7 @@ import getInitialState from '../store/initialState'
 
 import AdminTickets from './adminTickets'
 import SupportAdmins from './supportAdmins'
+import AdminMyAccount from './adminMyAccount'
 
 import adminsDashboard from '../components/adminsDashboard'
 
@@ -27,7 +28,7 @@ export default class CustomersApp extends React.Component {
       <Provider store={store}>
         <Router history={history}>
 
-          <Route path="/admin" component={adminsDashboard} >
+          <Route path="/admin_users" component={adminsDashboard} >
             <IndexRedirect to="/admin_users/tickets" />
             <Route path="/admin_users/tickets" component={AdminTickets} />
             <Route path="/admin_users/tickets/new" component={AdminTickets} />
@@ -36,6 +37,7 @@ export default class CustomersApp extends React.Component {
             <Route path="/admin_users/support_admins" component={SupportAdmins} />
             <Route path="/admin_users/support_admins/new" component={SupportAdmins} />
             <Route path="/admin_users/support_admins/:id" component={SupportAdmins} />
+            <Route path="/admin_users/my-account" component={AdminMyAccount} />
           </Route>
 
 

@@ -2,11 +2,48 @@ import React from 'react'
 import { browserHistory } from 'react-router'
 import FullCrud from './recordCrud'
 
-/*Even though it is a simple component, 
-this component can't be an stateless since need to delegate access to routes to its child
-*/
+import t from 'tcomb-form'
+
+const Roles = t.enums({
+  admin: 'Admin',
+  staff: 'Staff'
+})
+
+const AdminFormSchema = t.struct({
+  email: t.String,
+  password: t.String,
+  password_confirmation: t.String,
+  role: Roles
+})
+
+const AdminFormOptions = {
+  fields: {
+    email: {
+      type:'text',
+      config: {
+        size:'lg'
+      },
+      error:'This field is required'
+    },
+    password: {
+      type: 'password',
+      config: {
+        size:'lg'
+      },
+      error:'This field is required'
+    },
+    password_confirmation: {
+      type: 'password',
+      config: {
+        size:'lg'
+      },
+      error:'This field is required'
+    }
+  }
+}
+
 export default class SupportAdminsCrud extends React.Component {
   render(){
-    return(<FullCrud title="Support Admin Users" collectionName="/admin_users/support_admins" { ...this.props }/>)
+    return(<FullCrud formTitle="New Team member" formType={AdminFormSchema} formOptions={AdminFormOptions} hideFilters={true} title="Support Admin Users" collectionName="admin_users/support_admins" { ...this.props }/>)
   }
 }

@@ -2,11 +2,54 @@ import React from 'react'
 import { browserHistory } from 'react-router'
 import Crud from './recordCrud'
 
-/*Even though it is a simple component, 
-this component can't be an stateless since need to delegate access to routes to its child
-*/
+import t from 'tcomb-form'
+
+const EmergencyLevels = t.enums({
+  low: 'Low',
+  medium: 'Medium',
+  high: 'High'
+})
+
+const TicketFormSchema = t.struct({
+  subject: t.String,
+  description: t.String,
+  emergency_level: EmergencyLevels
+})
+
+const ticketFormOptions = {
+  fields: {
+    description: {
+      type:'textarea',
+      config: {
+        size:'lg'
+      },
+      error:'This field is required'
+    },
+    subject: {
+      config: {
+        size:'lg'
+      },
+      error:'This field is required'
+    },
+    emergency_level: {
+      config: {
+        size:'lg'
+      },
+      error:'This field is required'
+    }
+  }
+}
+
 export default class TicketsCrud extends React.Component {
   render(){
-    return(<Crud title="Tickets" collectionName="tickets" { ...this.props }/>)
+    return(<Crud namespace="customer_portal"
+                 formTitle="Open New Ticket" 
+                 formType={TicketFormSchema} 
+                 formOptions={ticketFormOptions} 
+                 title="Tickets" 
+                 collectionName="tickets"
+                 useNamespaceOnRequest={false}
+                 { ...this.props }
+          />)
   }
 }

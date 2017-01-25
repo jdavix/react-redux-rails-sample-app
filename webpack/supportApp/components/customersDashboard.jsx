@@ -2,14 +2,12 @@ import React from 'react'
 import DashboardWrapper from './dashboardWrapper'
 
 const menuOptions = [
-  {path: "/customers/tickets", label:"Tickets" , iconClass: "fa-question-circle"},
-  {path: "/customers/my-account", label:"My Account" , iconClass: "fa-user"}
+  {path: "/customer_portal/tickets", label:"Tickets" , iconClass: "fa-question-circle"},
+  {path: "/customer_portal/my-account", label:"My Account" , iconClass: "fa-user"}
 ]
 
 const CustomersDashboard = (props) => {
-  console.log(menuOptions)
-
-  return <DashboardWrapper options={menuOptions} />
+  return <DashboardWrapper options={menuOptions}>{props.children}</DashboardWrapper>
 }
 
 export default CustomersDashboard

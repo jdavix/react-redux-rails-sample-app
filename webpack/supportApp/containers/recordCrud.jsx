@@ -12,46 +12,9 @@ import Button from 'react-bootstrap/lib/Button'
 import Alert from 'react-bootstrap/lib/Alert'
 import Spinner from 'react-activity/lib/Spinner'
 
-
-import SmartTable from './smartTable'
-
 import t from 'tcomb-form'
 
-const EmergencyLevels = t.enums({
-  low: 'Low',
-  medium: 'Medium',
-  high: 'High'
-})
-
-const TicketFormSchema = t.struct({
-  subject: t.String,
-  description: t.String,
-  emergency_level: EmergencyLevels
-})
-
-const ticketFormOptions = {
-  fields: {
-    description: {
-      type:'textarea',
-      config: {
-        size:'lg'
-      },
-      error:'This field is required'
-    },
-    subject: {
-      config: {
-        size:'lg'
-      },
-      error:'This field is required'
-    },
-    emergency_level: {
-      config: {
-        size:'lg'
-      },
-      error:'This field is required'
-    }
-  }
-}
+import SmartTable from './smartTable'
 
 class RecordCrud extends React.Component {
 
@@ -66,19 +29,12 @@ class RecordCrud extends React.Component {
     this.onNewRecord = this.onNewRecord.bind(this)
     this.onShowRecord = this.onShowRecord.bind(this)
 
-    this._newRecordView = this._newRecordView.bind(this)
-    this._showRecordView = this._showRecordView.bind(this)
-
     this.createRecord = this.createRecord.bind(this)
 
     this.flashMessages = this.flashMessages.bind(this)
     this.onDismissFlash = this.onDismissFlash.bind(this)
 
     this.handleFilterChange = this.handleFilterChange.bind(this)
-
-    this._createPath = this._createPath.bind(this)
-    this._indexPath = this._indexPath.bind(this)
-    this._showPath = this._showPath.bind(this)
 
     this.state = {
       showModal: false,
@@ -91,32 +47,44 @@ class RecordCrud extends React.Component {
   Url to create a record via POST
   @returns {String} 
   */
-  _createPath() {
-    return this._indexPath()
+  _createPath(useNamespace = true) {
+    return this._indexPath(useNamespace)
   }
 
   /*
   Url to get list of records via GET
   @returns {String} 
   */
-  _indexPath(){
-    return (`/${this.props.collectionName}`)
+  _indexPath(useNamespace = true) {
+    if (this.props.namespace && useNamespace == true) {
+      return (`/${this.props.namespace}/${this.props.collectionName}`)
+    } else {
+      return (`/${this.props.collectionName}`)
+    }
   }
 
   /*
   Url to list a record via GET
   @returns {String} 
   */
-  _showPath(id){
-    return (`/${this.props.collectionName}/${id}`)
+  _showPath(id, useNamespace = true) {
+    if (this.props.namespace  && useNamespace == true) {
+      return (`/${this.props.namespace}/${this.props.collectionName}/${id}`)
+    } else {
+      return (`/${this.props.collectionName}/${id}`)
+    }
   }
 
   /*
   Url to display form to create new record
   @returns {String} 
   */
-  _newPath(){
-    return(`/${this.props.collectionName}/new`)
+  _newPath(useNamespace = true) {
+    if (this.props.namespace  && useNamespace == true) {
+      return(`/${this.props.namespace}/${this.props.collectionName}/new`)
+    } else {
+      return(`/${this.props.collectionName}/new`)
+    }
   }
 
   /* display flash messages
@@ -152,7 +120,7 @@ class RecordCrud extends React.Component {
     let settings = this.getModalSettings(this.props.route.path)
 
     if (this.props.params.id) {
-      this.props.requestActions.getRequest(`${this._indexPath()}/${this.props.params.id}/`, {
+      this.props.requestActions.getRequest(this._showPath(this.props.params.id, this.props.useNamespaceOnRequest), {
         auth_token: this.props.session.authToken
       }, (response) => {
         if (response) {
@@ -178,16 +146,16 @@ class RecordCrud extends React.Component {
   getModalSettings(path) {
     let settings = {open:false, modalContentType: "new"}
     switch(path){
-      case `/${this.props.collectionName}/new`:
+      case (this._newPath()):
         settings = {
-          title: "Open New Ticket",
+          title: this.props.formTitle,
           open: true,
           modalContentType: 'new'
         }
         break;
       case `/${this.props.collectionName}/:id`:
         settings = {
-          title: "Ticket Details",
+          title: "Details",
           open: true,
           modalContentType: 'show'
         }
@@ -239,27 +207,31 @@ class RecordCrud extends React.Component {
     }
   }
 
+  _showRecordContent() {
+    let recordFields = []
+    let field = null
+    for(field in this.state.record) {
+      recordFields.push(
+        <div key={field} className="row">
+          <div className="col-md-6 text-right">{`${field}:`}</div><div className="col-md-6">{this.state.record[field]}</div>
+        </div>
+      )
+    }
+    return(
+      <div className="record-show">
+        { recordFields }
+      </div>
+    )
+  }
+
   /*to populate modal with show view
   @returns {Component} Returns content for the main view modal body
   */
-  _showRecordView(){
+  _showRecordView() {
     if (this.state.record) {
       return(<span>
         <Modal.Body>
-          <div className="record-show">
-            <div className="row">
-              <div className="col-md-6 text-right">Subject:</div><div className="col-md-6">{this.state.record.subject}</div>
-            </div>
-            <div className="row">
-              <div className="col-md-6 text-right">Status:</div><div className="col-md-6">{this.state.record.status}</div>
-            </div>
-            <div className="row">
-              <div className="col-md-6 text-right">Description:</div><div className="col-md-6">{this.state.record.description}</div>
-            </div>
-            <div className="row">
-              <div className="col-md-6 text-right">Emergency Level:</div><div className="col-md-6">{this.state.record.emergency_level}</div>
-            </div>
-          </div>
+          {this._showRecordContent()}
         </Modal.Body>
         <Modal.Footer>
           <span>
@@ -278,8 +250,8 @@ class RecordCrud extends React.Component {
             <form>
               <t.form.Form
                 ref="form"
-                type={TicketFormSchema}
-                options={ticketFormOptions}
+                type={this.props.formType}
+                options={this.props.formOptions}
               />
             </form>
           </Modal.Body>
@@ -307,8 +279,6 @@ class RecordCrud extends React.Component {
 
   //initial data load
   componentDidMount() {
-    console.log("INDEX:")
-    console.log(this._indexPath())
     this.loadRecords()
     this.setModalState()
   }
@@ -316,7 +286,7 @@ class RecordCrud extends React.Component {
   //it queries the server for updating the main table view
   loadRecords(statusFilter = null) {
     statusFilter = statusFilter || this.props.visual.selectedFilter
-    this.props.requestActions.getRequest(this._indexPath(), {
+    this.props.requestActions.getRequest(this._indexPath(this.props.useNamespaceOnRequest), {
       auth_token: this.props.session.authToken,
       scope: statusFilter
     }, (response) => {
@@ -334,7 +304,7 @@ class RecordCrud extends React.Component {
     var formFields = this.refs.form.getValue();
     if (formFields) { // if validation fails, value will be null
 
-      this.props.requestActions.postRequest(this._indexPath(), {
+      this.props.requestActions.postRequest(this._indexPath(this.props.useNamespaceOnRequest), {
         auth_token: this.props.session.authToken,
         ticket: {
           ...formFields
@@ -396,7 +366,7 @@ class RecordCrud extends React.Component {
   //content to send to smartTable component for displaying collection actions
   collectionActions() {
     if (this.props.hideCollectionActions !=true) {
-      return(<Button onClick={this.onNewRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">Open New</Button>)
+      return(<Button onClick={this.onNewRecord} bsStyle="primary" bsSize="large" id="add-new-ticket">New</Button>)
     }
   }
 
@@ -408,16 +378,20 @@ class RecordCrud extends React.Component {
 
   //status filter select
   filters() {
-    let options = this.props.visual.ticketStatuses
-    options = options.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
-    return(
-      <div className="col-md-3">
-        <span>Filter by Status: </span>
-        <select className="form-control" onChange={this.handleFilterChange}>
-          {options}
-        </select>
-      </div>
-    )
+    //NOTE: pending to add support for custom filters per collection type
+    if (this.props.hideFilters != true) {
+      let options = this.props.visual.ticketStatuses
+      options = options.map((item) => { return (<option key={item.id} value={item.id}>{item.value}</option>) } )
+      return(
+        <div className="col-md-3">
+          <span>Filter by Status: </span>
+          <select className="form-control" onChange={this.handleFilterChange}>
+            {options}
+          </select>
+        </div>
+      )
+    }
+
   }
 
   render () {

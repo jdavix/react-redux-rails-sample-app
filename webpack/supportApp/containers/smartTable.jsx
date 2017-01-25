@@ -18,19 +18,28 @@ class SmartTable extends React.Component {
 
     this.displayTableData = this.displayTableData.bind(this)
     this.displayTableHeader = this.displayTableHeader.bind(this)
-    this._tableRow = this._tableRow.bind(this)
-    this._titleFor = this._titleFor.bind(this)
+
   }
 
+  _itemActions(row) {
+    return(
+      <Td key="id" column="id">
+        <span>
+          <a onClick={ () => this.props.showAction(row) }>View</a>
+        </span>
+      </Td>
+    )
+  }
 
   _tableRow(row) {
     let result = []
     let attribute = null
     for (attribute in row) {
       if (attribute!="id") {
-        result.push(<Td key={row.id} column={attribute}>{row[attribute]}</Td>)
+        result.push(<Td key={attribute} column={attribute}>{row[attribute]}</Td>)
       }
     }
+    result.push(this._itemActions(row))
     return result
   }
 
@@ -46,31 +55,32 @@ class SmartTable extends React.Component {
       for (let field in fieldsFromRecord) {
         let title = this._titleFor(field)
         if (field!="id") {
-          result.push(<Th key={fieldsFromRecord.id} column={field}><span>{title}</span></Th>)
+          result.push(<Th key={field} column={field}><span>{title}</span></Th>)
         }
       }
+      result.push(<Th key="id" column="id"><span>Actions</span></Th>)
       return(
         <Thead>
           { result }
         </Thead>
       )
+    } else {
+      return(<Thead />)
     }
   }
 
   displayTableData() {
     let data = this.props.ticketsCrud.items
-    return (data.map((row) => {
-    return (
-        <Tr key={row.id}>
-            { this._tableRow(row) }
-            <Td column="id">
-              <span>
-                <a onClick={ () => this.props.showAction(row) }>View</a>
-              </span>
-            </Td>
-        </Tr>
-    )
-    }))
+
+    if (data.length > 0 ) {
+      return (data.map((row) => {
+        return (
+          <Tr key={row.id} >
+              { this._tableRow(row) }
+          </Tr>
+        )
+      }))
+    }
   }
 
   render() {

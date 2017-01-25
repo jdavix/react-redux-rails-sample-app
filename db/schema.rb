@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170124042150) do
+ActiveRecord::Schema.define(version: 20170125044848) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
@@ -45,9 +45,11 @@ ActiveRecord::Schema.define(version: 20170124042150) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "auth_token"
+    t.string   "role"
     t.index ["auth_token"], name: "index_support_admins_on_auth_token", using: :btree
     t.index ["email"], name: "index_support_admins_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_support_admins_on_reset_password_token", unique: true, using: :btree
+    t.index ["role"], name: "index_support_admins_on_role", using: :btree
   end
 
   create_table "tickets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

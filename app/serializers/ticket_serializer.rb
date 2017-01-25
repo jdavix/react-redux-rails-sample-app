@@ -4,4 +4,5 @@ class TicketSerializer < ActiveModel::Serializer
   def status
     object.status_label
   end
+
 end
