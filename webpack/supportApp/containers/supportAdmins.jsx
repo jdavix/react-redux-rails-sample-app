@@ -44,6 +44,13 @@ const AdminFormOptions = {
 
 export default class SupportAdminsCrud extends React.Component {
   render(){
-    return(<FullCrud formTitle="New Team member" formType={AdminFormSchema} formOptions={AdminFormOptions} hideFilters={true} title="Support Admin Users" collectionName="admin_users/support_admins" { ...this.props }/>)
+    return(<FullCrud formTitle="New Team member"
+                     formType={AdminFormSchema}
+                     formOptions={AdminFormOptions}
+                     hideFilters={true}
+                     title="Support Admin Users"
+                     collectionName="admin_users/support_admins" {...this.props }
+           />
+          )
   }
 }

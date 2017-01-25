@@ -380,8 +380,6 @@ class RecordCrud extends React.Component {
   //status filter select
   filters() {
     //NOTE: pending to add support for custom filters per collection type
-    console.log("selected filter")
-    console.log(this.props.visual.selectedFilter)
     if (this.props.hideFilters != true) {
       let options = this.props.visual.ticketStatuses
       options = options.map(
