@@ -13,6 +13,11 @@ const transitionAction = {
   inprogress: "resolve"
 }
 
+const transitionToSection = {
+  start: 'In Progress',
+  resolve: 'Resolved'
+}
+
 class TicketsCrud extends React.Component {
 
   constructor(props){
@@ -22,12 +27,17 @@ class TicketsCrud extends React.Component {
   }
 
   updateTicket(ticket, options={}) {
+    let transition = transitionAction[ticket.status]
+
     this.props.requestActions.postRequest(`/admin_users/tickets/${ticket.id}/update_status`, {
       auth_token: this.props.session.authToken,
-      status_action: transitionAction[ticket.status],
+      status_action: transition,
       ...options
     }, (response) => {
       this.props.globalActions.updateModal({showModal:false})
+      this.props.globalActions.updateFlash({alertMessage: `Ticket #${ticket.id} moved to ${transitionToSection[transition]}`,
+                                            alertStyle: "success"
+                                           })
     })
   }
 
