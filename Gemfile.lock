@@ -63,6 +63,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.4)
+    database_cleaner (1.5.3)
     debug_inspector (0.0.2)
     devise (4.2.0)
       bcrypt (~> 3.0)
@@ -223,6 +224,7 @@ DEPENDENCIES
   bootstrap-sass (= 3.3.6)
   byebug
   coffee-rails (~> 4.2)
+  database_cleaner (= 1.5.3)
   devise (= 4.2.0)
   factory_girl_rails (= 4.8.0)
   foreman (= 0.83.0)
