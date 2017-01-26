@@ -21,8 +21,8 @@ class Ticket < ApplicationRecord
   validates :description, presence:true
 
   #Scopes:
-  scope :order_by_action_time, ->(status){
-    order(action_time(status) => :desc)
+  scope :order_by_action_time, ->(status = nil){
+    order(action_time(status) => :desc) if status
   }
 
 
@@ -45,13 +45,14 @@ class Ticket < ApplicationRecord
   end
 
   def self.action_time(scope)
-    time_field = if scope == "inprogress"
+    time_field = if (scope == "inprogress")
       "started_at"
     elsif "resolved"
       "resolved_at"
     else
       "created_at"
     end
+    return time_field
   end
 
   def status_label

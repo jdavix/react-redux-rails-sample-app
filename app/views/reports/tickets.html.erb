@@ -1,0 +1,37 @@
+ <!DOCTYPE html>
+<html>
+  <style>
+    table tr{
+      border-top: 1px solid #ccc;
+    }
+    table tr th {
+      padding: 10px
+    }
+    table tr td {
+      padding: 10px
+    }
+  </style>
+  <body>
+    <div>
+      <h5>Report generated at <%= Time.zone.now.to_s(:db)%></h5>
+      <table class="table">
+        <tr>
+          <th>ID</th>
+          <th>Resolved at</th>
+          <th>Subject</th>
+          <th>Status</th>
+          <th>Support Admin</th>
+        </tr>
+        <% @items.find_each do |ticket|%>
+          <tr>
+            <td><%= ticket.id %></td>
+            <td><%= ticket.resolved_at.strftime("%a, %B %d %H:%M - %Y ") %></td>
+            <td><%= ticket.subject %></td>
+            <td><%= ticket.status %></td>
+            <td><%= ticket.support_admin.try(:email) %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </body>
+</html>

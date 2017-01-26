@@ -9,8 +9,8 @@ class Api::V1::BaseController < ActionController::Base
   #       message: string
   #     }
   #   }
-  def standard_response(message: "", data: {}, status: 200, metadata: {}, serializer: nil)
-    metadata.merge!(message: message)
+  def standard_response(message: "", data: {}, status: 200, meta: {}, serializer: nil)
+    meta.merge!(message: message)
 
     if(data.is_a?(Array) || data.is_a?(ActiveRecord::Relation))
       data = { "records" => data.map{|item| serializer.new(item).as_json } }
@@ -18,7 +18,7 @@ class Api::V1::BaseController < ActionController::Base
       data = serializer.new(data).as_json
     end
 
-    render(json: {"metadata" => metadata }.merge({data: data}).to_json,
+    render(json: {"meta" => meta }.merge({data: data}).to_json,
            status: status)
   end
 

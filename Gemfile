@@ -47,6 +47,9 @@ gem 'active_model_serializers', '0.10.4'
 
 gem 'aasm', '4.11.1'
 
+gem 'wkhtmltopdf-binary', '0.9.9.3'
+gem 'wicked_pdf', '0.10.2'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec-rails', '3.5.2'

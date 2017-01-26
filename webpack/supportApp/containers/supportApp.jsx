@@ -9,6 +9,7 @@ import getInitialState from '../store/initialState'
 import AdminTickets from './adminTickets'
 import SupportAdmins from './supportAdmins'
 import AdminMyAccount from './adminMyAccount'
+import AdminReport from './adminReport'
 
 import adminsDashboard from '../components/adminsDashboard'
 
@@ -33,7 +34,7 @@ export default class CustomersApp extends React.Component {
             <Route path="/admin_users/tickets" component={AdminTickets} />
             <Route path="/admin_users/tickets/new" component={AdminTickets} />
             <Route path="/admin_users/tickets/:id" component={AdminTickets} />
-
+            <Route path="/admin_users/reports" component={AdminReport} />
             <Route path="/admin_users/support_admins" component={SupportAdmins} />
             <Route path="/admin_users/support_admins/new" component={SupportAdmins} />
             <Route path="/admin_users/support_admins/:id" component={SupportAdmins} />

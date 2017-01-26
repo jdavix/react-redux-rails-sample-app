@@ -17,6 +17,13 @@ class Api::V1::AdminUsers::TicketsController < Api::V1::TicketsController
     end
   end
 
+  def report
+    @tickets = Ticket.resolved.where("resolved_at >= ? and resolved_at <=  ?", (Time.zone.now - 1.month).beginning_of_month, (Time.zone.now - 1.month).end_of_month)
+    standard_response(data: @tickets,
+                      meta: {report_url: GeneratePdf.generate_report(@tickets)}, 
+                      serializer: ReportTicketSerializer)
+  end
+
   def authenticate
     authenticate_resource(:support_admin)
   end
