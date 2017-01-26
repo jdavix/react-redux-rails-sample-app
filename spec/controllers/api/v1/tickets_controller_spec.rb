@@ -4,14 +4,14 @@ RSpec.describe Api::V1::TicketsController, :type => :controller do
   describe "POST #create" do
     let(:customer){FactoryGirl.create(:customer)}
     context "successful sent ticket" do
-      before{post :create, params: {auth_token: customer.auth_token, ticket: {subject: "This is a Test Subject", description: "urgent help"}}}
+      before{post :create, params: {auth_token: customer.auth_token, record: {subject: "This is a Test Subject", description: "urgent help"}}}
       it{ expect(response).to be_success }
       it{ expect(response).to have_http_status(201) }
       it{ expect(assigns(:ticket)).to be_persisted}
     end
 
     context "Unsuccessful ticket creation" do
-      before{ post :create, params: {auth_token: customer.auth_token, ticket: {subject: "missing description field"}}}
+      before{ post :create, params: {auth_token: customer.auth_token, record: {subject: "missing description field"}}}
       it{ expect(response).to have_http_status(422) }
       it{ expect(JSON.parse(response.body)).to include("errors") 
       }
