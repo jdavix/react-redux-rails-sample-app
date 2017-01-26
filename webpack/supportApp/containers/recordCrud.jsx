@@ -123,7 +123,6 @@ class RecordCrud extends React.Component {
         auth_token: this.props.session.authToken
       }, (response) => {
         if (response) {
-
           this.props.globalActions.updateViewingRecord(response.data)
           this.props.globalActions.updateModal(
             {
@@ -333,11 +332,13 @@ class RecordCrud extends React.Component {
           ...formFields
         }
       }, (response) => {
+        console.log("OPT01")
+        console.log(response)
         if (response) {
           this.props.globalActions.updateModal({showModal:false})
 
           this.props.globalActions.updateFlash({
-            alertMessage: response.metadata.message,
+            alertMessage: response.meta.message,
             alertStyle: "success"
             })
 
@@ -410,8 +411,6 @@ class RecordCrud extends React.Component {
 
   //status filter select
   filters() {
-    console.log(111)
-    console.log(this.props.visual.selectedFilter)
     //NOTE: pending to add support for custom filters per collection type
     if (this.props.hideFilters != true) {
       let options = this.props.visual.ticketStatuses

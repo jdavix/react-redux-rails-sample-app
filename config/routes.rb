@@ -19,7 +19,13 @@ Rails.application.routes.draw do
       end
     end
   end
+  devise_scope :customer do
+    delete 'customer_session/sign_out', to: 'sessions#destroy'
+  end
 
+  devise_scope :support_admin do
+    delete 'admin_user_session/sign_out', to: 'sessions#destroy'
+  end
   get 'customer_portal/*path', to: 'customer_portal/base#index'
   get 'customer_portal/', to: 'customer_portal/base#index'
 

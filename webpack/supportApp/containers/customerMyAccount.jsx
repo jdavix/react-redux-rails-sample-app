@@ -6,7 +6,7 @@ export default class CustomerMyAccount extends React.Component {
     return (
       <div>
         <h2>My Account</h2>
-        <a rel="nofollow" data-method="delete" href="/customers/sign_out">Sign Out</a>
+        <a rel="nofollow" data-method="delete" href="/customer_session/sign_out">Sign Out</a>
       </div>)
   }
 }
