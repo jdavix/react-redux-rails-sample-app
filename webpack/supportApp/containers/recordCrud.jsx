@@ -410,6 +410,8 @@ class RecordCrud extends React.Component {
 
   //status filter select
   filters() {
+    console.log(111)
+    console.log(this.props.visual.selectedFilter)
     //NOTE: pending to add support for custom filters per collection type
     if (this.props.hideFilters != true) {
       let options = this.props.visual.ticketStatuses
@@ -427,7 +429,10 @@ class RecordCrud extends React.Component {
       return(
         <div className="col-md-3">
           <span>Filter by Status: </span>
-          <select className="form-control" onChange={this.handleFilterChange} defaultValue={this.props.visual.selectedFilter}>
+          <select className="form-control"
+                  onChange={this.handleFilterChange}
+                  value={this.props.visual.selectedFilter}
+          >
             {options}
           </select>
         </div>

@@ -119,7 +119,8 @@ class SmartTable extends React.Component {
 const mapStateToProps = (state) => {
   return {
     ticketsCrud: state.ticketsCrud,
-    request: state.request
+    request: state.request,
+    visual: state.visual
   }
 }
 

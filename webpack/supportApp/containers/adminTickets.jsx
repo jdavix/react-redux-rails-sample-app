@@ -14,8 +14,8 @@ const transitionAction = {
 }
 
 const transitionToSection = {
-  start: 'In Progress',
-  resolve: 'Resolved'
+  start: {label:'In Progress', status: 'inprogress'},
+  resolve: {label:'Resolved', status: 'resolved'}
 }
 
 class TicketsCrud extends React.Component {
@@ -24,6 +24,7 @@ class TicketsCrud extends React.Component {
     super(props)
     this.manageTicket = this.manageTicket.bind(this)
     this.updateTicket = this.updateTicket.bind(this)
+    this.refreshAfterUpdate = this.refreshAfterUpdate.bind(this)
   }
 
   updateTicket(ticket, options={}) {
@@ -35,10 +36,12 @@ class TicketsCrud extends React.Component {
       ...options
     }, (response) => {
       this.props.globalActions.updateModal({showModal:false})
-      this.props.globalActions.updateFlash({alertMessage: `Ticket #${ticket.id} moved to ${transitionToSection[transition]}`,
+      this.props.globalActions.updateFlash({alertMessage: `Ticket #${ticket.id} moved to ${transitionToSection[transition].label}`,
                                             alertStyle: "success"
                                            })
       browserHistory.push("/admin_users/tickets")
+      this.props.globalActions.updateFilter(transitionToSection[transition].status)
+      this.refreshAfterUpdate()
     })
   }
 
@@ -50,6 +53,20 @@ class TicketsCrud extends React.Component {
         </div>
       )
     }
+  }
+
+  refreshAfterUpdate() {
+    this.props.requestActions.getRequest("/admin_users/tickets", {
+      auth_token: this.props.session.authToken,
+      scope: this.props.visual.selectedFilter
+    }, (response) => {
+      if (response) {
+        this.props.globalActions.updateTickets(response.data.records)
+      } else {
+        alert("error comunicating with the server")
+      }
+    })
+    this.props.globalActions.updateFilter(statusFilter)
   }
 
   render(){
@@ -68,7 +85,8 @@ class TicketsCrud extends React.Component {
 const mapStateToProps = (state) => {
   return {
     session: state.session,
-    request: state.request
+    request: state.request,
+    visual: state.visual
   }
 }
 
