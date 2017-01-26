@@ -25,6 +25,10 @@ class TicketsCrud extends React.Component {
     this.manageTicket = this.manageTicket.bind(this)
     this.updateTicket = this.updateTicket.bind(this)
     this.refreshAfterUpdate = this.refreshAfterUpdate.bind(this)
+    this.onChangeAnswer = this.onChangeAnswer.bind(this)
+    this.state = {
+      answer: ""
+    }
   }
 
   updateTicket(ticket, options={}) {
@@ -33,6 +37,7 @@ class TicketsCrud extends React.Component {
     this.props.requestActions.postRequest(`/admin_users/tickets/${ticket.id}/update_status`, {
       auth_token: this.props.session.authToken,
       status_action: transition,
+      answer: this.state.answer,
       ...options
     }, (response) => {
       this.props.globalActions.updateModal({showModal:false})
@@ -45,11 +50,27 @@ class TicketsCrud extends React.Component {
     })
   }
 
+  onChangeAnswer(e){
+    console.log(e.target.value)
+    this.setState({answer: e.target.value})
+  }
+
   manageTicket(ticket) {
     if (transitionAction[ticket.status]) {
       return(
-        <div className="row text-center">
-          <a className="btn btn-lg btn-primary" onClick={ ()=>{this.updateTicket(ticket)} }>{transitionAction[ticket.status]}</a>
+        <div className="text-center">
+          { (transitionAction[ticket.status] == "resolve") ? <div className="row form-group">
+            <div className="col-md-12">
+              <label>Answer: </label>
+              <textarea onChange={this.onChangeAnswer} className="form-control" value={this.state.answer}></textarea>
+            </div>
+          </div> : null
+          }
+          <div className="row">
+            <div className="col-md-12">
+              <a className="btn btn-lg btn-primary" onClick={ ()=>{this.updateTicket(ticket)} }>{transitionAction[ticket.status]}</a>
+            </div>
+          </div>
         </div>
       )
     }
