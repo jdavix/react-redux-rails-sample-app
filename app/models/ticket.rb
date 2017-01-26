@@ -47,7 +47,7 @@ class Ticket < ApplicationRecord
   def self.action_time(scope)
     time_field = if (scope == "inprogress")
       "started_at"
-    elsif "resolved"
+    elsif scope == "resolved"
       "resolved_at"
     else
       "created_at"

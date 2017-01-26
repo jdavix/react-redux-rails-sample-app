@@ -332,8 +332,6 @@ class RecordCrud extends React.Component {
           ...formFields
         }
       }, (response) => {
-        console.log("OPT01")
-        console.log(response)
         if (response) {
           this.props.globalActions.updateModal({showModal:false})
 
