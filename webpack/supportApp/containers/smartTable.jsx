@@ -99,7 +99,6 @@ class SmartTable extends React.Component {
           ) : (
             <Table className="table"
                    sortable={['subject', 'status', 'created_at']}
-                   defaultSort={{column: 'created_at', direction: 'desc'}}
                    itemsPerPage={10}
                    pageButtonLimit={5}
                    noDataText="no records found"

@@ -9,7 +9,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
     filter = "all" if filter.blank?
     filter = filter.to_sym
     if Ticket.scopes.include?(filter)
-      @tickets = scope.send(filter)
+      @tickets = scope.send(filter).order_by_action_time(filter)
       standard_response(data: @tickets, serializer: TicketSerializer)
     else
       error_response(message: "invalid scope", status: 500)
