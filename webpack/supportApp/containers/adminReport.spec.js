@@ -57,7 +57,7 @@ describe('<AdminReport />', () => {
     adminReport = wrapper.find(AdminReport)
 
     setTimeout(() => {
-        done()
+      done()
     }, 1500)
 
   })
@@ -65,10 +65,15 @@ describe('<AdminReport />', () => {
     expect(adminReport.find(SmartTable)).to.have.length(1)
   })
 
+  it('renders a <SmartTable /> component', () => {
+    adminReport = wrapper.find(AdminReport)
+    expect(adminReport.find(SmartTable)).to.have.length(1)
+  })
+
   //since I'm using redux-mock-store, state is not updated automatically, for reference see:
   //https://github.com/arnaudbenard/redux-mock-store/issues/71
   it('triggers load tickets action after mounting', () => {
-    adminReport = wrapper.find(AdminReport)
-    expect(store.getState().ticketsCrud.items, 2).to.be.eql(items)
+    let updateTicketsAction = store.getActions().filter((action)=> { return (action.type == "UPDATE_TICKETS")  })[0]
+    expect(updateTicketsAction.tickets).to.be.eql(items)
   })
 })
