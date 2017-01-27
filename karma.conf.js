@@ -1,5 +1,5 @@
 var webpack = require('webpack');
-
+var path = require('path');
 module.exports = function (config) {
   config.set({
     browsers: [ 'Chrome' ], //run in Chrome
@@ -13,11 +13,17 @@ module.exports = function (config) {
     },
     reporters: [ 'dots' ], //report results in this format
     webpack: { //kind of a copy of your webpack config
+      resolve: {
+        root: path.join(__dirname, '..', 'webpack'),
+        extensions: ['', '.js', '.jsx', '.json']
+      },
       devtool: 'inline-source-map', //just do inline source maps instead of the default
       module: {
-        loaders: [
-          { test: /\.js$/, loader: 'babel-loader' }
-        ]
+        loaders: [{
+          test:  /\.jsx?$/,
+          exclude: /node_modules/,
+          loaders: ["babel-loader"]
+        }]
       },
       externals: {
         'cheerio': 'window',

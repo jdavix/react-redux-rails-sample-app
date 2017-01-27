@@ -1,11 +1,11 @@
 import React from 'react'
 import { shallow, mount, render } from 'enzyme'
-import AdminsDashboard from './adminsDashboard'
+import CustomersDashboard from './customersDashboard'
 import DashboardWrapper from './dashboardWrapper'
 
-describe('<AdminsDashboard />', () => {
+describe('<CustomersDashboard />', () => {
   it('renders one <DashboardWrapper /> component', () => {
-    const wrapper = shallow(<AdminsDashboard />)
+    const wrapper = shallow(<CustomersDashboard />)
     expect(wrapper.find(DashboardWrapper)).to.have.length(1)
   })
 })
