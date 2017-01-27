@@ -3,6 +3,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, IndexRoute, IndexRedirect, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
+
 import configureStore from '../store/configureStore'
 import getInitialState from '../store/initialState'
 

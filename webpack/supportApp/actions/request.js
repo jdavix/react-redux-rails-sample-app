@@ -87,7 +87,6 @@ export function getRequest(path, params, actionsCallback) {
               }
             })
       .then( (response) => {
-
         if (response.status >= 200 && response.status <= 299) {
 
           let json = response.data
