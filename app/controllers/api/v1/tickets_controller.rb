@@ -4,6 +4,8 @@ class Api::V1::TicketsController < Api::V1::BaseController
     authenticate
   end
 
+  #load tickets and ability to filter by scope
+  #This is the main tickets controller, used by admin_users/tickets_controller to modularize common behavior.
   def index
     filter = params[:scope]
     filter = "all" if filter.blank?
@@ -16,6 +18,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
     end
   end
 
+  #create a ticket, filtered by current authorized resource. 
   def create
     @ticket = Ticket.new(ticket_params)
     @ticket.customer = current_customer
@@ -30,6 +33,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
     end
   end
 
+  #create a ticket, filtered by current authorized resource. 
   def show
     @ticket = scope.find(params[:id])
     standard_response(data: @ticket, serializer: TicketSerializer)

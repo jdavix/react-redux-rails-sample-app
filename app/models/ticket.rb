@@ -44,6 +44,7 @@ class Ticket < ApplicationRecord
     SCOPES + [:all]
   end
 
+  #returns the column to sort given the scope name
   def self.action_time(scope)
     time_field = if (scope == "inprogress")
       "started_at"
@@ -55,6 +56,7 @@ class Ticket < ApplicationRecord
     return time_field
   end
 
+  #returns the status label value
   def status_label
     @status_label ||= STATUSES.invert[self.status.to_sym]
   end

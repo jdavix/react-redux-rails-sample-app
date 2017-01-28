@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :go_to_home
 
   private
-
+  #redirect to corresponding home page after signin
   def go_to_home
     if current_customer
       if params[:controller] == "support_admin/base"
@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #load authentication page or js apps page layout
   def layout_by_resource
     if devise_controller?
       "landing"
