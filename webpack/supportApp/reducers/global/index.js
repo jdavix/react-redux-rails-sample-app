@@ -1,7 +1,6 @@
 import {
   UPDATE_CURRENT_USER,
   UPDATE_AUTH_TOKEN,
-  LOCAL_CACHE_FAILURE,
   UPDATE_TICKETS,
   UPDATE_FILTER,
   SHOW_TICKET,
@@ -25,11 +24,6 @@ let currentUserReducer = function(state = initialState["session"], action) {
       return {
         ...state,
         authToken: action.authToken
-      }
-    case LOCAL_CACHE_FAILURE:
-      return {
-        ...state,
-        localCacheError: action.error
       }
     case USER_LOGOUT:
       return {
