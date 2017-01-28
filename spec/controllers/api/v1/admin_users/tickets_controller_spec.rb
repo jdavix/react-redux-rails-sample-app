@@ -29,7 +29,8 @@ RSpec.describe Api::V1::AdminUsers::TicketsController, :type => :controller do
         4.times {
           FactoryGirl.create(:ticket, customer:customer, status: 'resolved', resolved_at: (Time.zone.now - 1.month))
         }
-        GeneratePdf.stub(:generate_report).and_return("/path-awesome/url")
+        allow(GeneratePdf).to receive(:generate_report).and_return("/path-awesome/url")
+
         get :report, params: { auth_token:  support_admin.auth_token}
       }
       it{ expect(response).to be_success }
@@ -43,7 +44,7 @@ RSpec.describe Api::V1::AdminUsers::TicketsController, :type => :controller do
           FactoryGirl.create(:ticket, customer:customer)
           FactoryGirl.create(:ticket, customer:customer, status: 'resolved', resolved_at: (Time.zone.now - 5.month))
         }
-        GeneratePdf.stub(:generate_report).and_return("/path-awesome/url")
+        allow(GeneratePdf).to receive(:generate_report).and_return("/path-awesome/url")
         get :report, params: { auth_token:  support_admin.auth_token}
       }
       it{ expect(response).to be_success }

@@ -38,15 +38,18 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 #Devise for Authentication
-
 gem 'devise', '4.2.0'
 
+#to being able to run webpack and integrate it with the rails application
 gem 'webpack-rails', '0.9.9'
 
+#for serializing ActiveRecord instances
 gem 'active_model_serializers', '0.10.4'
 
+#state machine, status field management. 
 gem 'aasm', '4.11.1'
 
+#for converting html to pdf
 gem 'wkhtmltopdf-binary', '0.9.9.3'
 gem 'wicked_pdf', '0.10.2'
 
@@ -61,6 +64,8 @@ end
 group :test do
   gem 'database_cleaner', '1.5.3'
 end
+
+gem 'simplecov', :require => false, :group => :test
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.

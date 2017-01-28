@@ -1,5 +1,5 @@
 class SessionsController < Devise::SessionsController
-
+  protect_from_forgery with: :exception
   def destroy
     clear_session(current_support_admin) if current_support_admin
     clear_session(current_customer) if current_customer

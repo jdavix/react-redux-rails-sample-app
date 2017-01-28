@@ -37,7 +37,7 @@ class AdminReport extends React.Component {
     return (
       <div>
         <h2>Reports</h2>
-        <h3>Last Months Closed Tickets:</h3>
+        <h3>Last Months Resolved Tickets:</h3>
         {this.state.reportUrl ? <a href={this.state.reportUrl}>Download report</a> : null}
         <SmartTable tableColumns={["resolved_at", "subject", "status_label", "support_admin"]}/>
       </div>)

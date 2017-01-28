@@ -24,13 +24,15 @@ class SmartTable extends React.Component {
   }
 
   _itemActions(row) {
-    return(
-      <Td key="actions" column="actions">
-        <span>
-          <a onClick={ () => this.props.showAction(row) }>View</a>
-        </span>
-      </Td>
-    )
+    if (this.props.showAction) {
+      return(
+        <Td key="actions" column="actions">
+          <span>
+            <a onClick={ () => this.props.showAction(row) }>View</a>
+          </span>
+        </Td>
+      )
+    }
   }
 
   _tableRow(row) {
